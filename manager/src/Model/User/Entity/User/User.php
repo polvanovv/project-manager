@@ -75,6 +75,11 @@ class User
         $this->networks = new ArrayCollection();
     }
 
+    /**
+     * @param Email $email
+     * @param string $hash
+     * @param string $token
+     */
     public  function signUpByEmail(Email $email, string $hash, string $token): void
     {
 
@@ -84,6 +89,10 @@ class User
         $this->status = self::STATUS_WAIT;
     }
 
+    /**
+     * @param string $network
+     * @param string $identity
+     */
     public  function signUpByNetwork(string $network, string $identity): void
     {
         if (!$this->isNew()) {
@@ -95,6 +104,10 @@ class User
 
     }
 
+    /**
+     * @param string $network
+     * @param string $identity
+     */
     private function attachedNetwork(string $network, string $identity): void
     {
         foreach ($this->networks as $existing) {
@@ -107,6 +120,10 @@ class User
         
     }
 
+    /**
+     * @param ResetToken $token
+     * @param \DateTimeImmutable $date
+     */
     public function requestPasswordReset(ResetToken $token, \DateTimeImmutable $date): void
     {
         if (!$this->isActive()) {
@@ -122,6 +139,10 @@ class User
         $this->resetToken = $token;
     }
 
+    /**
+     * @param \DateTimeImmutable $date
+     * @param string $hash
+     */
     public function passwordReset(\DateTimeImmutable $date, string $hash): void
     {
         if (!$this->resetToken) {

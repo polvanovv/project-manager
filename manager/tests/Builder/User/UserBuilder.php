@@ -9,6 +9,14 @@ use App\Model\User\Entity\User\Email;
 use App\Model\User\Entity\User\Id;
 use App\Model\User\Entity\User\User;
 
+/**
+ * Class UserBuilder
+ *
+ * @package App\Tests\Builder\User
+ * @author Polvanov Igor <igor.polvanov@sibers.com>
+ * @copyright 2020 (c) Sibers
+ *
+ */
 class UserBuilder
 {
     private $id;
@@ -23,12 +31,21 @@ class UserBuilder
     private $network;
     private $identity;
 
+    /**
+     * UserBuilder constructor.
+     */
     public function __construct()
     {
         $this->id = Id::next();
         $this->date = new \DateTimeImmutable();
     }
 
+    /**
+     * @param Email|null $email
+     * @param string|null $hash
+     * @param string|null $token
+     * @return $this
+     */
     public function viaEmail(Email $email = null, string $hash = null, string $token = null): self
     {
 
@@ -40,6 +57,11 @@ class UserBuilder
         return $clone;
     }
 
+    /**
+     * @param string|null $network
+     * @param string|null $identity
+     * @return $this
+     */
     public function viaNetwork(string $network = null, string $identity = null): self
     {
         $clone = clone $this;
@@ -49,6 +71,9 @@ class UserBuilder
         return $clone;
     }
 
+    /**
+     * @return self
+     */
     public function confirmed():self
     {
         $clone = clone $this;
