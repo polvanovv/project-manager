@@ -46,6 +46,11 @@ class User
     private $confirmToken;
 
     /**
+     * @var Role
+     */
+    private $role;
+
+    /**
      * @var ResetToken|null
      */
     private $resetToken;
@@ -67,41 +72,47 @@ class User
      * @param Id $id
      * @param \DateTimeImmutable $date
      */
-    public function __construct(Id $id, \DateTimeImmutable $date)
+    private function __construct(Id $id, \DateTimeImmutable $date)
     {
         $this->id = $id;
         $this->createdAt = $date;
-        $this->status = self::STATUS_NEW;
+        $this->role = Role::user();
         $this->networks = new ArrayCollection();
     }
 
     /**
+     * @param Id $id
+     * @param \DateTimeImmutable $date
      * @param Email $email
      * @param string $hash
      * @param string $token
+     * @return User
      */
-    public  function signUpByEmail(Email $email, string $hash, string $token): void
+    public static  function signUpByEmail(Id $id, \DateTimeImmutable $date, Email $email, string $hash, string $token): User
     {
+        $user = new self($id, $date);
+        $user->email = $email;
+        $user->passwordHash = $hash;
+        $user->confirmToken = $token;
+        $user->status = self::STATUS_WAIT;
 
-        $this->email = $email;
-        $this->passwordHash = $hash;
-        $this->confirmToken = $token;
-        $this->status = self::STATUS_WAIT;
+        return $user;
     }
 
     /**
+     * @param Id $id
+     * @param \DateTimeImmutable $date
      * @param string $network
      * @param string $identity
+     * @return User
      */
-    public  function signUpByNetwork(string $network, string $identity): void
+    public static  function signUpByNetwork(Id $id, \DateTimeImmutable $date,string $network, string $identity): User
     {
-        if (!$this->isNew()) {
-            throw new \DomainException('User is already sign up.');
-        }
+        $user = new self($id, $date);
+        $user->attachedNetwork($network, $identity);
+        $user->status = self::STATUS_ACTIVE;
 
-        $this->attachedNetwork($network, $identity);
-        $this->status = self::STATUS_ACTIVE;
-
+        return $user;
     }
 
     /**
@@ -164,6 +175,15 @@ class User
 
         $this->status = self::STATUS_ACTIVE;
         $this->confirmToken = null;
+    }
+
+    public function changeRole(Role $role): void
+    {
+        if ($this->role->isEqual($role)) {
+            throw new \DomainException('Role is already same.');
+        }
+
+        $this->role = $role;
     }
 
 
@@ -244,6 +264,14 @@ class User
     public function getResetToken(): ?ResetToken
     {
         return $this->resetToken;
+    }
+
+    /**
+     * @return Role
+     */
+    public function getRole(): Role
+    {
+        return $this->role;
     }
 
 }

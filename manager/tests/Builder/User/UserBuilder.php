@@ -7,6 +7,7 @@ namespace App\Tests\Builder\User;
 
 use App\Model\User\Entity\User\Email;
 use App\Model\User\Entity\User\Id;
+use App\Model\User\Entity\User\Role;
 use App\Model\User\Entity\User\User;
 
 /**
@@ -30,6 +31,8 @@ class UserBuilder
 
     private $network;
     private $identity;
+
+    private $role;
 
     /**
      * UserBuilder constructor.
@@ -82,15 +85,23 @@ class UserBuilder
         return $clone;
     }
 
+    public function withRole(Role $role): self
+    {
+        $clone = clone $this;
+
+        $clone->role = $role;
+        return $clone;
+    }
+
     public function build(): User
     {
-        $user = new User(
-            $this->id,
-            $this->date
-        );
+
+        $user = null;
 
         if ($this->email) {
-            $user->signUpByEmail(
+            $user = User::signUpByEmail(
+                $this->id,
+                $this->date,
                 $this->email,
                 $this->hash,
                 $this->token
@@ -102,10 +113,16 @@ class UserBuilder
         }
 
         if ($this->network) {
-            $user->signUpByNetwork(
+            $user = User::signUpByNetwork(
+                $this->id,
+                $this->date,
                 $this->network,
                 $this->identity
             );
+        }
+
+        if ($this->role) {
+            $user->changeRole($this->role);
         }
 
         return $user;
