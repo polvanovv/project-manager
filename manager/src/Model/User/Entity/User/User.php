@@ -6,6 +6,7 @@ namespace App\Model\User\Entity\User;
 
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Class User
@@ -13,6 +14,13 @@ use Doctrine\Common\Collections\ArrayCollection;
  * @package App\Model\User\Entity\User
  * @author Polvanov Igor <igor.polvanov@sibers.com>
  * @copyright 2020 (c) Sibers
+ *
+ * @ORM\Entity()
+ * @ORM\HasLifecycleCallbacks()
+ * @ORM\Table(name="user_users", uniqueConstraints={
+ *  @ORM\UniqueConstraint(columns={"email"}),
+ *  @ORM\UniqueConstraint(columns={"reset_token_token"})
+ *  })
  *
  */
 class User
@@ -23,46 +31,56 @@ class User
 
     /**
      * @var Id
+     * @ORM\Column(type="user_user_id")
+     * @ORM\Id()
      */
     private $id;
 
     /**
      * @var \DateTimeImmutable
+     * @ORM\Column(type="datetime_immutable")
      */
     private $createdAt;
 
     /**
      * @var Email
+     * @ORM\Column(type="user_user_email", nullable=true)
      */
     private $email;
 
     /**
-     * @var string
+     * @var string|null
+     * @ORM\Column(type="string", nullable=true, name="password_hash")
      */
     private $passwordHash;
     /**
      * @var string
+     * @ORM\Column(type="string", nullable=true, name="confirm_token")
      */
     private $confirmToken;
 
     /**
      * @var Role
+     * @ORM\Column(type="user_user_role")
      */
     private $role;
 
     /**
      * @var ResetToken|null
+     * @ORM\Embedded(class="ResetToken", columnPrefix="reset_token_")
      */
     private $resetToken;
 
     /**
      * @var string
+     * @ORM\Column(type="string", length=16)
      */
     private $status;
 
 
     /**
      * @var ArrayCollection
+     * @ORM\OneToMany(targetEntity="Network", mappedBy="user", orphanRemoval=true, cascade={"persist"})
      */
     private $networks;
 
@@ -272,6 +290,16 @@ class User
     public function getRole(): Role
     {
         return $this->role;
+    }
+
+    /**
+     * @ORM\PostLoad()
+     */
+    public function checkEmbeds(): void
+    {
+        if (!$this->resetToken->isEmpty()) {
+            $this->resetToken = null;
+        }
     }
 
 }
