@@ -68,4 +68,12 @@ class ResetToken
     {
         return empty($this->token);
     }
+
+    /**
+     * @return string
+     */
+    public function __toString()
+    {
+      return $this->getToken();
+    }
 }
