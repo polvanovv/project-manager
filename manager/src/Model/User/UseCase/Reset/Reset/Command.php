@@ -11,6 +11,7 @@ class Command
 
     /**
      * @var string
+     * @Assets\NotBlank()
      */
     public $token;
 
@@ -21,6 +22,10 @@ class Command
      */
     public $password;
 
+    /**
+     * Command constructor.
+     * @param string $token
+     */
     public function __construct(string $token)
     {
 
