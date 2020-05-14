@@ -5,6 +5,7 @@ declare(strict_types = 1);
 namespace App\Controller\Auth;
 
 
+use App\ReadModel\User\UserFetcher;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -62,10 +63,17 @@ class ResetController extends AbstractController
      * @param string $token
      * @param Request $request
      * @param Reset\Reset\Handler $handler
+     * @param UserFetcher $users
      * @return Response
      */
-    public function reset(string $token, Request $request, Reset\Reset\Handler $handler): Response
+    public function reset(string $token, Request $request, Reset\Reset\Handler $handler, UserFetcher $users): Response
     {
+        if (!$users->existsByResetToken($token)) {
+            $this->addFlash('error', 'Incorrect or already confirmed token.');
+
+            return $this->redirectToRoute('home');
+        }
+
         $command = new Reset\Reset\Command($token);
 
         $form = $this->createForm(Reset\Reset\Form::class, $command);
@@ -75,6 +83,7 @@ class ResetController extends AbstractController
             try {
                 $handler->handle($command);
                 $this->addFlash('success', 'Password is successfully changed.');
+
                 return $this->redirectToRoute('home');
             } catch (\DomainException $e) {
                 $this->logger->error($e->getMessage(), ['exception'=>$e]);
