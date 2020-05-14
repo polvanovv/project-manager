@@ -1,13 +1,27 @@
 security:
     # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
     providers:
-        in_memory: { memory: ~ }
+        fetcher:
+            id: App\Security\UserProvider
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
         main:
             anonymous: true
+            guard:
+                authenticators:
+                    - App\Security\LoginFormAuthenticator
+            logout:
+                path: app_logout
+
+            remember_me:
+                secret: '%kernel.secret%'
+                lifetime: 604800
+                path: /
+
+                # where to redirect after logout
+                # target: app_any_route
 
             # activate different ways to authenticate
 
@@ -17,8 +31,12 @@ security:
             # form_login: true
             # https://symfony.com/doc/current/security/form_login_setup.html
 
+    role_hierarchy:
+        ROLE_ADMIN: [ROLE_USER]
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
-        # - { path: ^/admin, roles: ROLE_ADMIN }
-        # - { path: ^/profile, roles: ROLE_USER }
+         - { path: ^/admin, roles: IS_AUTHNTICATED_ANONYMOSLY }
+         - { path: ^/singup, roles: IS_AUTHNTICATED_ANONYMOSLY }
+         - { path: ^/reset, roles: IS_AUTHNTICATED_ANONYMOSLY }
+         - { path: ^/, roles: ROLE_USER }
