@@ -26,7 +26,7 @@ class Form extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('password', Type\EmailType::class);
+            ->add('password', Type\PasswordType::class);
     }
 
     /**
