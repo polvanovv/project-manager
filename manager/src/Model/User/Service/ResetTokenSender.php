@@ -29,17 +29,17 @@ class ResetTokenSender
 
     /**
      * @param Email $email
-     * @param string $token
+     * @param ResetToken $token
      * @throws \Twig\Error\LoaderError
      * @throws \Twig\Error\RuntimeError
      * @throws \Twig\Error\SyntaxError
      */
-    public function send(Email $email, string $token): void
+    public function send(Email $email, ResetToken $token): void
     {
         $message = (new \Swift_Message('Sign Up Confirmation.'))
             ->setTo($email->getValue())
             ->setBody($this->twig->render('mail/user/reset.html.twig', [
-                'token' => $token,
+                'token' => $token->getToken(),
             ]), 'text/html');
 
         if (!$this->mailer->send($message)) {

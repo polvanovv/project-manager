@@ -277,9 +277,9 @@ class User
     }
 
     /**
-     * @return string|null
+     * @return ResetToken|null
      */
-    public function getResetToken(): ?string
+    public function getResetToken(): ?ResetToken
     {
         return $this->resetToken;
     }
