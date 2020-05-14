@@ -297,7 +297,7 @@ class User
      */
     public function checkEmbeds(): void
     {
-        if (!$this->resetToken->isEmpty()) {
+        if ($this->resetToken->isEmpty()) {
             $this->resetToken = null;
         }
     }

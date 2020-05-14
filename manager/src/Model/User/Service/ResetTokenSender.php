@@ -36,7 +36,7 @@ class ResetTokenSender
      */
     public function send(Email $email, ResetToken $token): void
     {
-        $message = (new \Swift_Message('Sign Up Confirmation.'))
+        $message = (new \Swift_Message('Password Resetting.'))
             ->setTo($email->getValue())
             ->setBody($this->twig->render('mail/user/reset.html.twig', [
                 'token' => $token->getToken(),
