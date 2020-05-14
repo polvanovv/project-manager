@@ -23,17 +23,12 @@ class ConfirmTokenSender
      * @var Environment
      */
     private $twig;
-    /**
-     * @var array
-     */
-    private $from;
 
-    public function __construct(\Swift_Mailer $mailer, Environment $twig, array $from)
+    public function __construct(\Swift_Mailer $mailer, Environment $twig)
     {
 
         $this->mailer = $mailer;
         $this->twig = $twig;
-        $this->from = $from;
     }
 
     /**
@@ -46,7 +41,6 @@ class ConfirmTokenSender
     public function send(Email $email, string $token): void
     {
         $message = (new \Swift_Message('Sign Up Confirmation.'))
-            ->setFrom($this->from)
             ->setTo($email->getValue())
             ->setBody($this->twig->render('mail/user/signup.html.twig', [
                 'token' => $token,
