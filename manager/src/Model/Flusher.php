@@ -17,16 +17,12 @@ class Flusher
      * @var EntityManagerInterface
      */
     private $em;
-    /**
-     * @var EventDispatcher
-     */
-    private $dispatcher;
 
-    public function __construct(EntityManagerInterface $em, EventDispatcher $dispatcher)
+
+    public function __construct(EntityManagerInterface $em)
     {
 
         $this->em = $em;
-        $this->dispatcher = $dispatcher;
     }
 
     public function flush(): void
