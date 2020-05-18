@@ -25,4 +25,15 @@ class Command
      */
     public $identity;
 
+    /**
+     * Command constructor.
+     * @param string $network
+     * @param string $id
+     */
+    public function __construct(string $network, string $id)
+    {
+        $this->network = $network;
+        $this->identity = $id;
+    }
+
 }

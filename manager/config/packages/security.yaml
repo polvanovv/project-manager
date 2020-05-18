@@ -3,15 +3,22 @@ security:
     providers:
         fetcher:
             id: App\Security\UserProvider
+    encoders:
+        App\Security\UserIdentity: native
+
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
         main:
             anonymous: true
+            user_checker: App\Security\UserChecker
             guard:
                 authenticators:
                     - App\Security\LoginFormAuthenticator
+                    - App\Security\OAuth\FacebookAuthenticator
+                entry_point: App\Security\LoginFormAuthenticator
+            form_login: true
             logout:
                 path: app_logout
 
@@ -36,7 +43,8 @@ security:
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
-         - { path: ^/admin, roles: IS_AUTHNTICATED_ANONYMOSLY }
-         - { path: ^/singup, roles: IS_AUTHNTICATED_ANONYMOSLY }
-         - { path: ^/reset, roles: IS_AUTHNTICATED_ANONYMOSLY }
+         - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+         - { path: ^/singup, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+         - { path: ^/reset, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+         - { path: ^/oauth, roles: IS_AUTHENTICATED_ANONYMOUSLY }
          - { path: ^/, roles: ROLE_USER }

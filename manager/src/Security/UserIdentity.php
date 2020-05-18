@@ -40,6 +40,9 @@ class UserIdentity implements UserInterface, EquatableInterface
      */
     private $role;
 
+    /**
+     * @var string
+     */
     private $status;
 
     /**
@@ -103,6 +106,14 @@ class UserIdentity implements UserInterface, EquatableInterface
     public function getUsername(): string
     {
         return $this->username;
+    }
+
+    /**
+     * @return string
+     */
+    public function getStatus(): string
+    {
+        return $this->status;
     }
 
     /**

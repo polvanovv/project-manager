@@ -28,7 +28,7 @@ class Handler
         $this->flusher = $flusher;
     }
 
-    public function handler(Command $command): void
+    public function handle(Command $command): void
     {
         if ($this->userRepository->hasByNetworkIdentity($command->network, $command->identity)) {
             throw new \DomainException('User already exists.');

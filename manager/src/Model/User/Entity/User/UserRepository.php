@@ -47,7 +47,7 @@ class UserRepository
     {
         return $this->repo->createQueryBuilder('u')
             ->select('COUNT(u.id)')
-            ->innerJoin('u.network', 'n')
+            ->innerJoin('u.networks', 'n')
             ->andWhere('n.network = :network and n.identity = :identity')
             ->setParameter(':network', $network)
             ->setParameter(':identity', $identity)

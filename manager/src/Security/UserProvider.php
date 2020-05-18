@@ -43,32 +43,47 @@ class UserProvider implements UserProviderInterface
      */
     public function loadUserByUsername(string $username)
     {
-        $user = $this->users->findForAuth($username);
+        $user = $this->loadUser($username);
 
         if (!$user) {
             throw new UsernameNotFoundException('');
         }
 
-        return self::userByUserName($user);
+        return self::identityByUserName($user, $username);
     }
 
     /**
-     * @param UserInterface $user
+     * @param UserInterface $identity
      * @return UserInterface
      */
-    public function refreshUser(UserInterface $user): UserInterface
+    public function refreshUser(UserInterface $identity): UserInterface
     {
-        if (!$user instanceof UserIdentity) {
-            throw new UnsupportedUserException('Invalid user class ' . \get_class($user));
+        if (!$identity instanceof UserIdentity) {
+            throw new UnsupportedUserException('Invalid user class ' . \get_class($identity));
         }
 
-        $user = $this->users->findForAuth($user->getUsername());
+        $user = $this->loadUser($identity->getUsername());
 
         if (!$user) {
             throw new UsernameNotFoundException('');
         }
 
-        return self::userByUserName($user);
+        return self::identityByUserName($user, $identity->getUsername());
+
+    }
+
+    private function loadUser($username): AuthView
+    {
+        $chunks = explode(':', $username);
+        if (count($chunks) === 2 && $user = $this->users->findForAuthByNetwork($chunks[0], $chunks[1])) {
+            return $user;
+        }
+
+        if ($user = $this->users->findForAuthByEmail($username)) {
+            return $user;
+        }
+
+        throw new UsernameNotFoundException('');
 
     }
 
@@ -78,19 +93,20 @@ class UserProvider implements UserProviderInterface
      */
     public function supportsClass(string $class): bool
     {
-        return $class instanceof UserIdentity;
+        return $class === UserIdentity::class;
     }
 
     /**
      * @param AuthView $user
+     * @param string $username
      * @return UserIdentity
      */
-    private static function userByUserName(AuthView $user): UserIdentity
+    private static function identityByUserName(AuthView $user, string $username): UserIdentity
     {
         return new UserIdentity(
             $user->id,
-            $user->email,
-            $user->password_hash,
+            $username,
+            $user->password_hash ?: '',
             $user->role,
             $user->status
         );

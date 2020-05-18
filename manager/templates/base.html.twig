@@ -28,21 +28,30 @@
     <nav class="navbar navbar-expand-md fixed-top bg-dark">
         <div class="container">
             <a class="navbar-brand" href="{{ path('home') }}">App</a>
-            <button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#navbarCollapse"
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse"
                     aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggle"></span>
+                <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="nambarCollapse">
                 <ul class="navbar-nav ml-auto">
-                    <li class="nav-item active">
-                        <a class="nav-link" href="{{ path('home') }}">Home</a>
-                    </li>
-                    <li class="nav-item active">
-                        <a class="nav-link" href="{{ path('auth_signup') }}">Sing Up</a>
-                    </li>
-                    <li class="nav-item active">
-                        <a class="nav-link" href="{{ path('auth_reset') }}">Reset</a>
-                    </li>
+                    {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                        <li class="nav-item active">
+                            <a class="nav-link" href="{{ path('home') }}">Home</a>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="{{ path('app_logout') }}">Log Out</a>
+                        </li>
+                    {% else %}
+                        <li class="nav-item active">
+                            <a class="nav-link" href="{{ path('app_login') }}">Login</a>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="{{ path('auth_signup') }}">Sing Up</a>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="{{ path('auth_reset') }}">Reset</a>
+                        </li>
+                    {% endif %}
                 </ul>
             </div>
         </div>
