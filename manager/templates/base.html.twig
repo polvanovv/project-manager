@@ -37,9 +37,18 @@
                 </a>
 
                 <div class="dropdown-menu dropdown-menu-right pt-0">
+                    <div class="dropdown-header text-center">
+                        <strong>Account</strong>
+                    </div>
+                    <a class="dropdown-item " href="{{ path('profile') }}">
+                        <i class="fa fa-user mr-2"></i> Profile</a>
+
                     <a class="dropdown-item" href="{{ path('app_logout') }}">
                         <i class="fa fa-lock mr-2"></i> Logout</a>
                 </div>
+
+
+
             </li>
         </ul>
     </header>
