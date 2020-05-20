@@ -2,7 +2,7 @@
 
 declare(strict_types = 1);
 
-namespace App\Model\User\UseCase\SingUp\Confirm;
+namespace App\Model\User\UseCase\SingUp\Confirm\ByToken;
 
 
 use App\Model\Flusher;

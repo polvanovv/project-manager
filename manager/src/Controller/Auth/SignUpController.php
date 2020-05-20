@@ -61,12 +61,12 @@ class SignUpController extends AbstractController
      * @Route("/signup/{token}", name="auth_signup_confirm")
      *
      * @param string $token
-     * @param SingUp\Confirm\Handler $handler
+     * @param SingUp\Confirm\ByToken\Handler $handler
      * @return Response
      */
-    public function confirm(string $token, SingUp\Confirm\Handler $handler): Response
+    public function confirm(string $token, SingUp\Confirm\ByToken\Handler $handler): Response
     {
-        $command = new SingUp\Confirm\Command($token);
+        $command = new SingUp\Confirm\ByToken\Command($token);
 
         try {
             $handler->handle($command);

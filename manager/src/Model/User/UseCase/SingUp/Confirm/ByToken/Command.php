@@ -2,7 +2,7 @@
 
 declare(strict_types = 1);
 
-namespace App\Model\User\UseCase\SingUp\ByEmail\Confirm;
+namespace App\Model\User\UseCase\SingUp\Confirm\ByToken;
 
 
 /**
