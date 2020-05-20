@@ -52,9 +52,16 @@
             </li>
         </ul>
     </header>
+    {% block breadcrumbs %}
+    <div class="c-subheader justify-content-between px-3">
+        <ol class="breadcrumb border-0 m-0 px-0 px-md-3">
+            <li class="breadcrumb-item"><a href="{{ path('home') }}">Home</a></li>
+            <li class="breadcrumb-item active">Dashboard</li>
+        </ol>
+    </div>
+        {% endblock %}
     <div class="c-body">
         <main class="c-main">
-            {% block breadcrumbs %}{% endblock %}
             <div class="container-fluid">
                 <div id="ui-view">
                     {% include '_flashes.html.twig' %}
