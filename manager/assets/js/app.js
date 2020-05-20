@@ -1,5 +1,4 @@
 import '../css/app.scss';
 
 require('bootstrap');
-
-console.log('Hello Webpack Encore! Edit me in assets/js/app.js');
+require('@coreui/coreui');

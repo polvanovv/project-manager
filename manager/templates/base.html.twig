@@ -9,55 +9,59 @@
         {{ encore_entry_link_tags('app') }}
     {% endblock %}
 </head>
-<body class="d-flex flex-column h-100">
-<header>
-    <nav class="navbar navbar-expand-md fixed-top bg-dark">
-        <div class="container">
-            <a class="navbar-brand" href="{{ path('home') }}">App</a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse"
-                    aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="nambarCollapse">
-                <ul class="navbar-nav ml-auto">
-                    {% if is_granted('IS_AUTHENTICATED_FULLY') %}
-                        <li class="nav-item active">
-                            <a class="nav-link" href="{{ path('home') }}">Home</a>
-                        </li>
-                        <li class="nav-item active">
-                            <a class="nav-link" href="{{ path('app_logout') }}">Log Out</a>
-                        </li>
-                    {% else %}
-                        <li class="nav-item active">
-                            <a class="nav-link" href="{{ path('app_login') }}">Login</a>
-                        </li>
-                        <li class="nav-item active">
-                            <a class="nav-link" href="{{ path('auth_signup') }}">Sing Up</a>
-                        </li>
-                        <li class="nav-item active">
-                            <a class="nav-link" href="{{ path('auth_reset') }}">Reset</a>
-                        </li>
-                    {% endif %}
-                </ul>
-            </div>
-        </div>
-    </nav>
-</header>
 
-<main role="main" class="flex-shring-0">
-    <div class="container">
-        {% block breadcrumbs %}{% endblock %}
-        {% include '_flashes.html.twig' %}
-        {% block body %}{% endblock %}
+<body class="c-app">
+<div class="c-sidebar c-sidebar-dark c-sidebar-fixed c-sidebar-lg-show" id="sidebar">
+    <div class="c-sidebar-brand d-md-down-none">
+        <span class="">Main logo</span>
     </div>
-</main>
-<footer class="footer mt-auto py-3">
-    <div class="container">
-        <span class="text-muted">App</span>
+    <ul class="c-sidebar-nav">
+        <li class="c-sidebar-nav-item">
+            <a class="c-sidebar-nav-link" href="#">Dashboard</a>
+        </li>
+    </ul>
+    <button class="c-sidebar-minimizer c-class-toggler" type="button" data-target="_parent"
+            data-class="c-sidebar-unfoldable">
+    </button>
+</div>
+<div class="c-wrapper">
+    <header class="c-header c-header-ligth c-header-fixed">
+        <button class="c-header-toggler c-class-toggler mfs-3 d-md-down-none" type="button" data-target="#sidebar"
+                data-class="c-sidebar-lg-show" responsive="true">
+            <span class="icon-menu"></span>
+        </button>
+        <ul class="c-header-nav mfs-auto">
+            <li class="c-header-nav-item dropdown">
+                <a class="c-header-nav-link" data-toggle="dropdown" href="#" role="button" aria-haspopup="true"
+                   aria-expanded="false">{{ app.user.username }}
+                </a>
+
+                <div class="dropdown-menu dropdown-menu-right pt-0">
+                    <a class="dropdown-item" href="{{ path('app_logout') }}">
+                        <i class="fa fa-lock mr-2"></i> Logout</a>
+                </div>
+            </li>
+        </ul>
+    </header>
+    <div class="c-body">
+        <main class="c-main">
+            {% block breadcrumbs %}{% endblock %}
+            <div class="container-fluid">
+                <div id="ui-view">
+                    {% include '_flashes.html.twig' %}
+                    {% block body %}{% endblock %}
+                </div>
+            </div>
+        </main>
     </div>
-</footer>
+    <footer class="c-footer">
+        <div>
+            <span>© {{ "now"|date("Y") }} All rights reserved</span>
+        </div>
+    </footer>
+</div>
 {% block javascripts %}
-{{ encore_entry_script_tags('app') }}
+    {{ encore_entry_script_tags('app') }}
 {% endblock %}
 </body>
 </html>
