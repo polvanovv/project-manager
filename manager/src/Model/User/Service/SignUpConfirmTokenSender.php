@@ -12,7 +12,7 @@ use Twig\Environment;
  * Interface ConfirmTokenSender
  * @package App\Model\User\Service
  */
-class ConfirmTokenSender
+class SignUpConfirmTokenSender
 {
 
     /**

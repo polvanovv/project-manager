@@ -15,7 +15,7 @@ use Ramsey\Uuid\Uuid;
  * @copyright 2020 (c) Sibers
  *
  */
-class ConfirmTokenizer
+class SignUpConfirmTokenizer
 {
     /**
      * @return string
