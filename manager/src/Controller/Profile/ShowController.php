@@ -18,7 +18,7 @@ use Symfony\Component\Routing\Annotation\Route;
  * @copyright 2020 (c) Sibers
  *
  */
-class ProfileController extends AbstractController
+class ShowController extends AbstractController
 {
     /**
      * @var UserFetcher
@@ -38,7 +38,7 @@ class ProfileController extends AbstractController
      * @Route("/profile", name="profile")
      * @return Response
      */
-    public function index()
+    public function show(): Response
     {
         $user = $this->fetcher->findDetail($this->getUser()->getId());
 
