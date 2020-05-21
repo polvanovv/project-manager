@@ -45,4 +45,13 @@ class Email
     {
         return $this->value;
     }
+
+    /**
+     * @param Email $other
+     * @return bool
+     */
+    public function isEqual(self $other): bool
+    {
+        return $this->getValue() === $other->getValue();
+    }
 }
