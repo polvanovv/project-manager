@@ -60,6 +60,18 @@ class User
     private $confirmToken;
 
     /**
+     * @var Email|null
+     * @ORM\Column(type="user_user_email", name="new_email", nullable=true)
+     */
+    private $newEmail;
+
+    /**
+     * @var string|null
+     * @ORM\Column(type="string", name="new_email_token", nullable=true)
+     */
+    private $newEmailToken;
+
+    /**
      * @var Role
      * @ORM\Column(type="user_user_role")
      */
@@ -185,6 +197,41 @@ class User
         
     }
 
+    /**
+     * @param Email $email
+     * @param string $token
+     */
+    public function requestEmailChanging(Email $email, string $token): void
+    {
+        if (!$this->isActive()) {
+            throw new \DomainException('User is not active.');
+        }
+
+        if ($this->email && $this->email->isEqual($email)) {
+            throw new \DomainException('Email is already same.');
+        }
+
+        $this->newEmail = $email;
+        $this->newEmailToken = $token;
+    }
+
+    /**
+     * @param string $token
+     */
+    public function confirmEmailChanging(string $token): void
+    {
+        if (!$this->newEmailToken) {
+            throw new \DomainException('Changing is not requested.');
+        }
+
+        if ($this->newEmailToken !== $token) {
+            throw new \DomainException('Incorrect changing token.');
+        }
+
+        $this->email = $this->newEmail;
+        $this->newEmail = null;
+        $this->newEmailToken = null;
+    }
     public function confirmSignUp(): void
     {
         if (!$this->isWait()) {
@@ -300,6 +347,22 @@ class User
         if ($this->resetToken->isEmpty()) {
             $this->resetToken = null;
         }
+    }
+
+    /**
+     * @return Email|null
+     */
+    public function getNewEmail(): ?Email
+    {
+        return $this->newEmail;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getNewEmailToken(): ?string
+    {
+        return $this->newEmailToken;
     }
 
 }

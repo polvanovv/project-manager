@@ -22,7 +22,12 @@
                     <th>Email</th>
                     <td>
                         {{ user.email }}
+                        <a href="{{ path('profile_email') }}" class="btn btn-sm btn-outline-primary"><span class="fa fa-pencil"></span></a>
                     </td>
+                </tr>
+                <tr>
+                    <th>Id</th>
+                    <td>{{ user.id }}</td>
                 </tr>
                 <tr>
                     <th>Created</th>
