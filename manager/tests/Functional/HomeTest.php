@@ -6,6 +6,7 @@ namespace App\Tests\Functional;
 
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\HttpFoundation\Response;
 
 class HomeTest extends WebTestCase
 {
@@ -14,7 +15,7 @@ class HomeTest extends WebTestCase
         $client = static::createClient();
         $client->request('GET', '/');
 
-        self::assertSame(302, $client->getResponse()->getStatusCode());
+        self::assertSame(Response::HTTP_FOUND, $client->getResponse()->getStatusCode());
         self::assertSame('http://localhost/login', $client->getResponse()->headers->get('Location'));
     }
 
@@ -28,7 +29,7 @@ class HomeTest extends WebTestCase
 
         $crawler = $client->request('GET', '/');
 
-        self::assertSame(200, $client->getResponse()->getStatusCode());
+        self::assertSame(Response::HTTP_OK, $client->getResponse()->getStatusCode());
         self::assertContains('Hello', $crawler->filter('h1')->text());
     }
 }
