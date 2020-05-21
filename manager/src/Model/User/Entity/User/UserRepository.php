@@ -101,6 +101,9 @@ class UserRepository
         return $user;
     }
 
+    /**
+     * @param User $user
+     */
     public function add(User $user): void
     {
         $this->em->persist($user);
