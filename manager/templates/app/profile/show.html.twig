@@ -12,7 +12,6 @@
 {% endblock %}
 
 {% block body %}
-
     <div class="card">
         <div class="card-header">Profile</div>
         <div class="card-body">
@@ -22,7 +21,8 @@
                     <th>Email</th>
                     <td>
                         {{ user.email }}
-                        <a href="{{ path('profile_email') }}" class="btn btn-sm btn-outline-primary"><span class="fa fa-pencil"></span></a>
+                        <a href="{{ path('profile_email') }}" class="btn btn-sm btn-outline-primary"><span
+                                    class="fa fa-pencil"></span></a>
                     </td>
                 </tr>
                 <tr>
@@ -46,11 +46,14 @@
         </div>
     </div>
 
-    {% if user.networks %}
+
     <div class="card">
         <div class="card-header">Networks</div>
+
         <div class="card-body">
-                <table class="table table-responsive-sm table-bordered table-striped table-sm">
+            {% if user.networks %}
+            <table class="table table-responsive-sm table-bordered table-striped table-sm">
+
                     <tbody>
                     {% for network in user.networks %}
                         <tr>
@@ -59,8 +62,13 @@
                         </tr>
                     {% endfor %}
                     </tbody>
-                </table>
+
+
+            </table>
+            {% else %}
+            <a href="{{ path('profile_oauth_facebook') }}" class="btn btn-facebook">Attach Facebook</a>
+            {% endif %}
         </div>
+
     </div>
-    {% endif %}
 {% endblock %}
