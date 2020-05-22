@@ -47,6 +47,10 @@ class UserFetcher
                     ->execute()->fetchColumn(0) > 0;
     }
 
+    /**
+     * @param string $email
+     * @return AuthView|null
+     */
     public function findForAuthByEmail(string $email): ?AuthView
     {
         $stmt = $this->connection->createQueryBuilder()
@@ -68,6 +72,11 @@ class UserFetcher
         return $result ?: null;
     }
 
+    /**
+     * @param string $network
+     * @param string $identity
+     * @return AuthView|null
+     */
     public function findForAuthByNetwork(string $network, string $identity): ?AuthView
     {
         $stmt = $this->connection->createQueryBuilder()
@@ -91,6 +100,10 @@ class UserFetcher
         return $result ?: null;
     }
 
+    /**
+     * @param string $email
+     * @return ShortModel|null
+     */
     public function findByEmail(string $email): ?ShortModel
     {
         $stmt = $this->connection->createQueryBuilder()
@@ -111,6 +124,10 @@ class UserFetcher
         return $result ?: null;
     }
 
+    /**
+     * @param string $id
+     * @return DetailView|null
+     */
     public function findDetail(string $id): ?DetailView
     {
 
@@ -143,5 +160,29 @@ class UserFetcher
         $view->networks = $stmt->fetchAll();
 
         return $view;
+    }
+
+    /**
+     * @param string $token
+     * @return ShortModel|null
+     */
+    public function findBySignUpConfirmToken(string $token): ?ShortModel
+    {
+        $stmt = $this->connection->createQueryBuilder()
+            ->select(
+                'id',
+                'email',
+                'role',
+                'status'
+            )
+            ->from('user_users')
+            ->where('confirm_token = :token')
+            ->setParameter(':token', $token)
+            ->execute();
+
+        $stmt->setFetchMode(FetchMode::CUSTOM_OBJECT, ShortModel::class);
+        $result = $stmt->fetch();
+
+        return $result ?: null;
     }
 }

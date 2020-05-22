@@ -6,11 +6,15 @@ namespace App\Controller\Auth;
 
 
 use App\Model\User\UseCase\SingUp;
+use App\ReadModel\User\UserFetcher;
+use App\Security\LoginFormAuthenticator;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\User\UserProviderInterface;
+use Symfony\Component\Security\Guard\GuardAuthenticatorHandler;
 
 class SignUpController extends AbstractController
 {
@@ -19,10 +23,16 @@ class SignUpController extends AbstractController
      */
     private $logger;
 
-    public function __construct(LoggerInterface $logger)
+    /**
+     * @var UserFetcher
+     */
+    private $fetcher;
+
+    public function __construct(LoggerInterface $logger, UserFetcher $fetcher)
     {
 
         $this->logger = $logger;
+        $this->fetcher = $fetcher;
     }
     /**
      * @Route("/signup", name="auth_signup")
@@ -62,16 +72,40 @@ class SignUpController extends AbstractController
      *
      * @param string $token
      * @param SingUp\Confirm\ByToken\Handler $handler
+     * @param Request $request
+     * @param UserProviderInterface $userProvider
+     * @param GuardAuthenticatorHandler $guardHandler
+     * @param LoginFormAuthenticator $formAuthenticator
      * @return Response
      */
-    public function confirm(string $token, SingUp\Confirm\ByToken\Handler $handler): Response
+    public function confirm(
+        string $token,
+        SingUp\Confirm\ByToken\Handler $handler,
+        Request $request,
+        UserProviderInterface $userProvider,
+        GuardAuthenticatorHandler $guardHandler,
+        LoginFormAuthenticator $authenticator
+    ): Response
     {
+
+        if (!$user = $this->fetcher->findBySignUpConfirmToken($token)) {
+            $this->addFlash('error', 'Incorrect or already confirmed token.');
+            return  $this->redirectToRoute('auth_signup');
+        }
+
+
         $command = new SingUp\Confirm\ByToken\Command($token);
 
         try {
             $handler->handle($command);
             $this->addFlash('success', 'Email is successfully confirmed.');
-            return $this->redirectToRoute('home');
+
+            return $guardHandler->authenticateUserAndHandleSuccess(
+                $userProvider->loadUserByUsername($user->email),
+                $request,
+                $authenticator,
+                'main'
+            );
         } catch (\DomainException $e) {
             $this->logger->error($e->getMessage(), ['exception' => $e]);
             $this->addFlash('error', $e->getMessage());
