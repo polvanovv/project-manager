@@ -136,6 +136,8 @@ class UserFetcher
                 'id',
                 'email',
                 'role',
+                'name_first first_name',
+                'name_last last_name',
                 'status'
             )
             ->from('user_users')
@@ -156,6 +158,7 @@ class UserFetcher
             ->execute();
 
         $stmt->setFetchMode(FetchMode::CUSTOM_OBJECT, NetworkView::class);
+
 
         $view->networks = $stmt->fetchAll();
 

@@ -49,6 +49,12 @@ class User
     private $email;
 
     /**
+     * @var Name
+     * @ORM\Embedded(class="Name")
+     */
+    private $name;
+
+    /**
      * @var string|null
      * @ORM\Column(type="string", nullable=true, name="password_hash")
      */
@@ -101,11 +107,13 @@ class User
      * User constructor.
      * @param Id $id
      * @param \DateTimeImmutable $date
+     * @param Name $name
      */
-    private function __construct(Id $id, \DateTimeImmutable $date)
+    private function __construct(Id $id, \DateTimeImmutable $date, Name $name)
     {
         $this->id = $id;
         $this->createdAt = $date;
+        $this->name = $name;
         $this->role = Role::user();
         $this->networks = new ArrayCollection();
     }
@@ -113,14 +121,15 @@ class User
     /**
      * @param Id $id
      * @param \DateTimeImmutable $date
+     * @param Name $name
      * @param Email $email
      * @param string $hash
      * @param string $token
      * @return User
      */
-    public static  function signUpByEmail(Id $id, \DateTimeImmutable $date, Email $email, string $hash, string $token): User
+    public static  function signUpByEmail(Id $id, \DateTimeImmutable $date, Name $name, Email $email, string $hash, string $token): User
     {
-        $user = new self($id, $date);
+        $user = new self($id, $date, $name);
         $user->email = $email;
         $user->passwordHash = $hash;
         $user->confirmToken = $token;
@@ -133,12 +142,13 @@ class User
      * @param Id $id
      * @param \DateTimeImmutable $date
      * @param string $network
+     * @param Name $name
      * @param string $identity
      * @return User
      */
-    public static  function signUpByNetwork(Id $id, \DateTimeImmutable $date,string $network, string $identity): User
+    public static  function signUpByNetwork(Id $id, \DateTimeImmutable $date, Name $name, string $network,  string $identity): User
     {
-        $user = new self($id, $date);
+        $user = new self($id, $date, $name);
         $user->attachedNetwork($network, $identity);
         $user->status = self::STATUS_ACTIVE;
 
@@ -232,6 +242,7 @@ class User
         $this->newEmail = null;
         $this->newEmailToken = null;
     }
+
     public function confirmSignUp(): void
     {
         if (!$this->isWait()) {
@@ -242,6 +253,9 @@ class User
         $this->confirmToken = null;
     }
 
+    /**
+     * @param Role $role
+     */
     public function changeRole(Role $role): void
     {
         if ($this->role->isEqual($role)) {
@@ -251,6 +265,10 @@ class User
         $this->role = $role;
     }
 
+    public function changeName(Name $name): void
+    {
+        $this->name = $name;
+    }
 
     /**
      * @return bool
@@ -363,6 +381,14 @@ class User
     public function getNewEmailToken(): ?string
     {
         return $this->newEmailToken;
+    }
+
+    /**
+     * @return Name
+     */
+    public function getName(): Name
+    {
+        return $this->name;
     }
 
 }

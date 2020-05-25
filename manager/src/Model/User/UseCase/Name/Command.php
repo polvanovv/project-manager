@@ -2,13 +2,15 @@
 
 declare(strict_types = 1);
 
-namespace App\Model\User\UseCase\SingUp\Request;
+namespace App\Model\User\UseCase\Name;
 
 use Symfony\Component\Validator\Constraints as Assert;
+
+
 /**
  * Class Command
  *
- * @package App\Model\User\UseCase\SingUp\Request
+ * @package App\Model\User\UseCase\Name
  * @author Polvanov Igor <igor.polvanov@sibers.com>
  * @copyright 2020 (c) Sibers
  *
@@ -16,32 +18,32 @@ use Symfony\Component\Validator\Constraints as Assert;
 class Command
 {
 
+
     /**
      * @var string
      * @Assert\NotBlank()
-     *
      */
     public $firstName;
 
     /**
      * @var string
      * @Assert\NotBlank()
-     *
      */
     public $lastName;
 
     /**
      * @var string
      * @Assert\NotBlank()
-     * @Assert\Email()
      */
-    public $email;
+    public $id;
 
     /**
-     * @var string
-     * @Assert\NotBlank()
-     * @Assert\Length(min="6")
+     * Command constructor.
+     * @param string $id
      */
-    public $password;
+    public function __construct(string $id)
+    {
 
+        $this->id = $id;
+    }
 }

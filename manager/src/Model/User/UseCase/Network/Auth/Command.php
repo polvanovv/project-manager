@@ -26,6 +26,16 @@ class Command
     public $identity;
 
     /**
+     * @var string
+     */
+    public $firstName;
+
+    /**
+     * @var string
+     */
+    public $lastName;
+
+    /**
      * Command constructor.
      * @param string $network
      * @param string $id

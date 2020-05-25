@@ -26,6 +26,14 @@
                     </td>
                 </tr>
                 <tr>
+                    <th>Name</th>
+                    <td>
+                        {{ user.first_name }} {{ user.last_name }}
+                        <a href="{{ path('profile_name_edit') }}" class="btn btn-sm btn-outline-primary"><span
+                                    class="fa fa-pencil"></span></a>
+                    </td>
+                </tr>
+                <tr>
                     <th>Id</th>
                     <td>{{ user.id }}</td>
                 </tr>
