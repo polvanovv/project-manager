@@ -172,6 +172,26 @@ class User
     }
 
     /**
+     * @param string $network
+     * @param string $identity
+     */
+    public function detachNetwork(string $network, string $identity)
+    {
+        foreach ($this->networks as $existing) {
+            if ($existing->isFor($network, $identity)) {
+                if (!$this->email && $this->networks->count() === 1) {
+                    throw new \DomainException('Unable to detach the last network');
+                }
+
+                $this->networks->removeElement($existing);
+                return;
+            }
+
+            throw new \DomainException('Network is not attached');
+        }
+    }
+
+    /**
      * @param ResetToken $token
      * @param \DateTimeImmutable $date
      */
