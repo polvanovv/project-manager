@@ -58,6 +58,7 @@ class UserFetcher
                 'id',
                 'email',
                 'password_hash',
+                'TRIM(CONCAT(name_first, \' \', name_last)) as name',
                 'role',
                 'status'
             )
