@@ -1,0 +1,7 @@
+$card-spacer-x: .6rem;
+$card-spacer-y: .7rem;
+
+$font-size-base: .85rem;
+
+$spacer: 0.65rem;
+$grid-gutter-width: 15px;
