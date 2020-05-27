@@ -2,7 +2,7 @@
 
 declare(strict_types = 1);
 
-namespace App\Model\User\UseCase\Role;
+namespace App\Model\User\UseCase\Edit;
 
 use App\Model\User\Entity\User\User;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -10,25 +10,33 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * Class Command
  *
- * @package App\Model\User\UseCase\Role
+ * @package App\Model\User\UseCase\Edit
  * @author Polvanov Igor <igor.polvanov@sibers.com>
  * @copyright 2020 (c) Sibers
  *
  */
 class Command
 {
-
     /**
-     * @var string
      * @Assert\NotBlank()
      */
     public $id;
 
     /**
-     * @var string
      * @Assert\NotBlank()
      */
-    public $role;
+    public $firstName;
+
+    /**
+     * @Assert\NotBlank()
+     */
+    public $lastName;
+
+    /**
+     * @Assert\NotBlank()
+     * @Assert\Email()
+     */
+    public $email;
 
     /**
      * Command constructor.
@@ -46,9 +54,11 @@ class Command
     public static function fromUser(User $user): self
     {
         $command = new self($user->getId()->getValue());
-        $command->role = $user->getRole()->getName();
+
+        $command->firstName = $user->getName()->getFirst();
+        $command->lastName = $user->getName()->getLast();
+        $command->email = $user->getEmail()->getValue();
 
         return $command;
     }
-
 }

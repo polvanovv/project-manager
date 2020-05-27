@@ -25,9 +25,9 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class User
 {
-    public const STATUS_NEW = 'new';
     public const STATUS_WAIT = 'wait';
     public const STATUS_ACTIVE = 'active';
+    public const STATUS_BLOCKED = 'blocked';
 
     /**
      * @var Id
@@ -153,6 +153,35 @@ class User
         $user->status = self::STATUS_ACTIVE;
 
         return $user;
+    }
+
+    /**
+     * @param Id $id
+     * @param \DateTimeImmutable $date
+     * @param Name $name
+     * @param Email $email
+     * @param string $hash
+     * @return User
+     */
+    public static function createUser(Id $id, \DateTimeImmutable $date, Name $name, Email $email, string $hash): User
+    {
+        $user = new self($id, $date, $name);
+        $user->email = $email;
+        $user->passwordHash = $hash;
+        $user->status = self::STATUS_ACTIVE;
+
+        return $user;
+
+    }
+
+    /**
+     * @param Email $email
+     * @param Name $name
+     */
+    public function editUser(Email $email, Name $name): void
+    {
+        $this->email = $email;
+        $this->name  = $name;
     }
 
     /**
@@ -290,13 +319,16 @@ class User
         $this->name = $name;
     }
 
-    /**
-     * @return bool
-     */
-    public function isNew(): bool
+    public function activate()
     {
-        return $this->status === self::STATUS_NEW;
+        $this->status = self::STATUS_ACTIVE;
     }
+
+    public function block()
+    {
+        $this->status = self::STATUS_BLOCKED;
+    }
+
     /**
      * @return bool
      */
@@ -311,6 +343,14 @@ class User
     public function isActive():bool
     {
         return $this->status === self::STATUS_ACTIVE;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isBlocked(): bool
+    {
+        return $this->status === self::STATUS_BLOCKED;
     }
 
     /**
@@ -409,6 +449,14 @@ class User
     public function getName(): Name
     {
         return $this->name;
+    }
+
+    /**
+     * @return string
+     */
+    public function getStatus(): string
+    {
+        return $this->status;
     }
 
 }

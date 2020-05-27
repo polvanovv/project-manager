@@ -1,0 +1,27 @@
+{% extends "base.html.twig" %}
+
+{% block title %}Change Role{% endblock %}
+
+{% block breadcrumbs %}
+    <div class="c-subheader justify-content-between px-3">
+        <ol class="breadcrumb border-0 m-0 px-0 px-md-3">
+            <li class="breadcrumb-item"><a href="{{ path('home') }}">Home</a></li>
+            <li class="breadcrumb-item"><a href="{{ path('users') }}">Users</a></li>
+            <li class="breadcrumb-item"><a href="{{ path('user_show', {'id': user.id}) }}">{{ user.name.full }}</a></li>
+            <li class="breadcrumb-item active">Role</li>
+        </ol>
+    </div>
+{% endblock %}
+
+{% block body %}
+    <div class="card">
+        <div class="card-body">
+
+            {{ form_start(form) }}
+            {{ form_widget(form) }}
+            <button type="submit" class="btn btn-primary">Save</button>
+            {{ form_end(form) }}
+
+        </div>
+    </div>
+{% endblock %}

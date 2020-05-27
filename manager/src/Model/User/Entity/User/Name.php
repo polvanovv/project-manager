@@ -67,7 +67,7 @@ class Name
      */
     public function getFull()
     {
-        return $this->first . '' . $this->last;
+        return $this->first . ' ' . $this->last;
     }
 
 }

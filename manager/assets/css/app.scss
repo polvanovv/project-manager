@@ -26,3 +26,18 @@ main {
         padding-left: 15px;
     }
 }
+
+.controls {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+
+  & > * {
+      margin-right: 4px;
+
+      &:last-child{
+          margin-right: 0;
+      }
+  }
+}

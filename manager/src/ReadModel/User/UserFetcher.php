@@ -5,8 +5,11 @@ declare(strict_types = 1);
 namespace App\ReadModel\User;
 
 
+use App\ReadModel\User\Filter\Filter;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\FetchMode;
+use Knp\Component\Pager\Pagination\PaginationInterface;
+use Knp\Component\Pager\PaginatorInterface;
 
 /**
  * Class UserFetcher
@@ -24,13 +27,19 @@ class UserFetcher
     private $connection;
 
     /**
+     * @var PaginatorInterface
+     */
+    private $paginator;
+
+    /**
      * UserFetcher constructor.
      * @param Connection $connection
+     * @param PaginatorInterface $paginator
      */
-    public function __construct(Connection $connection)
+    public function __construct(Connection $connection, PaginatorInterface $paginator)
     {
-
         $this->connection = $connection;
+        $this->paginator = $paginator;
     }
 
     /**
@@ -189,4 +198,48 @@ class UserFetcher
 
         return $result ?: null;
     }
+
+    /**
+     * @param Filter $filter
+     * @param int $page
+     * @param int $size
+     * @return PaginationInterface
+     */
+    public function all(Filter $filter, int $page, int $size): PaginationInterface
+    {
+        $qb = $this->connection->createQueryBuilder()
+            ->select(
+                'id',
+                'created_at',
+                'email',
+                'role',
+                'TRIM(CONCAT(name_first, \' \', name_last)) as name',
+                'status'
+            )
+            ->from('user_users')
+            ->orderBy('created_at','desc')
+        ;
+
+            if ($filter->name) {
+                $qb->andWhere($qb->expr()->like('LOWER(CONCAT(name_first, \' \', name_last))', ':name'));
+                $qb->setParameter(':name', '%' . mb_strtolower($filter->name) . '%');
+            }
+
+            if ($filter->email) {
+                $qb->andWhere($qb->expr()->like('email', ':email'));
+                $qb->setParameter(':email', '%' . mb_strtolower($filter->email) . '%');
+            }
+
+            if ($filter->status) {
+                $qb->andWhere('status = :status');
+                $qb->setParameter(':status', $filter->status);
+            }
+
+            if ($filter->role) {
+                $qb->andWhere('role = :role');
+                $qb->setParameter(':role', $filter->role);
+            }
+
+        return $this->paginator->paginate($qb, $page, $size);
+       }
 }
