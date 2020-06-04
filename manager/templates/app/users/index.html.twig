@@ -34,12 +34,12 @@
                 <table class="table table-responsive-sm table-bordered table-striped table-sm">
                     <thead>
                     <tr>
-                        <td>Name</td>
+                        <td>{{ knp_pagination_sortable(pagination, 'Name', 'name') }}</td>
                         <td>ID</td>
-                        <td>Created At</td>
-                        <td>Email</td>
-                        <td>Role</td>
-                        <td>Status</td>
+                        <td>{{ knp_pagination_sortable(pagination, 'Created At', 'created_at')}}</td>
+                        <td>{{ knp_pagination_sortable(pagination, 'Email', 'email')}}</td>
+                        <td>{{ knp_pagination_sortable(pagination, 'Role', 'role')}}</td>
+                        <td>{{ knp_pagination_sortable(pagination, 'Status', 'status')}}</td>
                     </tr>
                     </thead>
                     <tbody>

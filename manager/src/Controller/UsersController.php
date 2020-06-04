@@ -33,7 +33,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class UsersController extends AbstractController
 {
 
-    const PER_PAGE = 2;
+    const PER_PAGE = 10;
     /**
      * @var LoggerInterface
      */
@@ -54,10 +54,17 @@ class UsersController extends AbstractController
     {
         $filter = new Filter\Filter();
 
+
         $form = $this->createForm(Filter\Form::class, $filter);
         $form->handleRequest($request);
 
-        $pagination = $userFetcher->all($filter, $request->query->getInt('page', 1), self::PER_PAGE);
+        $pagination = $userFetcher->all(
+            $filter,
+            $request->query->getInt('page', 1),
+            self::PER_PAGE,
+            $request->query->get('sort', 'created_at'),
+            $request->query->get('direction', 'desc')
+        );
 
         return $this->render('app/users/index.html.twig', [
             'pagination' => $pagination,
