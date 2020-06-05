@@ -14,24 +14,27 @@
 
 {% block body %}
     <div class="controls">
-        <a href="{{ path('users_edit', {id: user.id}) }}" class="btn btn-success">Edit</a>
         {% if app.user.id != user.id.value %}
+            <a href="{{ path('users_edit', {id: user.id}) }}" class="btn btn-success">Edit</a>
             <a href="{{ path('users_role', {id: user.id}) }}" class="btn btn-success">Change Role</a>
         {% endif %}
         {% if user.wait %}
-            <form action="{{ path('users_confirm', {id: user.id}) }}" method="post" onsubmit="return confirm('Are you sure?')">
+            <form action="{{ path('users_confirm', {id: user.id}) }}" method="post"
+                  onsubmit="return confirm('Are you sure?')">
                 <input type="hidden" name="token" value="{{ csrf_token('confirm') }}">
                 <button type="submit" class="btn btn-primary">Confirm</button>
             </form>
         {% endif %}
-        {% if user.active and app.user.id != user.id.value  %}
-            <form action="{{ path('users_block', {id: user.id}) }}" method="post" onsubmit="return confirm('Are you sure?')">
+        {% if user.active and app.user.id != user.id.value %}
+            <form action="{{ path('users_block', {id: user.id}) }}" method="post"
+                  onsubmit="return confirm('Are you sure?')">
                 <input type="hidden" name="token" value="{{ csrf_token('block') }}">
                 <button type="submit" class="btn btn-primary">Block</button>
             </form>
         {% endif %}
         {% if user.blocked %}
-            <form action="{{ path('user_activate', {id: user.id}) }}" method="post" onsubmit="return confirm('Are you sure?')">
+            <form action="{{ path('user_activate', {id: user.id}) }}" method="post"
+                  onsubmit="return confirm('Are you sure?')">
                 <input type="hidden" name="token" value="{{ csrf_token('activate') }}">
                 <button type="submit" class="btn btn-primary">Activate</button>
             </form>
