@@ -14,6 +14,7 @@ use App\Model\User\Entity\User\User;
 use App\ReadModel\User\Filter;
 use App\ReadModel\User\UserFetcher;
 use Psr\Log\LoggerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -29,6 +30,7 @@ use Symfony\Component\Routing\Annotation\Route;
  * @copyright 2020 (c) Sibers
  *
  * @Route("/users", name="users")
+ * @IsGranted("ROLE_MANAGE_USERS")
  */
 class UsersController extends AbstractController
 {

@@ -48,5 +48,4 @@ security:
          - { path: ^/signup, roles: IS_AUTHENTICATED_ANONYMOUSLY }
          - { path: ^/reset, roles: IS_AUTHENTICATED_ANONYMOUSLY }
          - { path: ^/oauth, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-         - { path: ^/users, roles: ROLE_MANAGE_USERS }
          - { path: ^/, roles: ROLE_USER }
