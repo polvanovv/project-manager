@@ -5,9 +5,12 @@ declare(strict_types = 1);
 namespace App\ReadModel\User;
 
 
+use App\Model\User\Entity\User\User;
+use App\ReadModel\NotFoundException;
 use App\ReadModel\User\Filter\Filter;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\FetchMode;
+use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\Pagination\PaginationInterface;
 use Knp\Component\Pager\PaginatorInterface;
 
@@ -32,14 +35,21 @@ class UserFetcher
     private $paginator;
 
     /**
+     * @var \Doctrine\Persistence\ObjectRepository
+     */
+    private $repository;
+
+    /**
      * UserFetcher constructor.
      * @param Connection $connection
      * @param PaginatorInterface $paginator
+     * @param EntityManagerInterface $em
      */
-    public function __construct(Connection $connection, PaginatorInterface $paginator)
+    public function __construct(Connection $connection, PaginatorInterface $paginator, EntityManagerInterface $em)
     {
         $this->connection = $connection;
         $this->paginator = $paginator;
+        $this->repository = $em->getRepository(User::class);
     }
 
     /**
@@ -136,43 +146,15 @@ class UserFetcher
 
     /**
      * @param string $id
-     * @return DetailView|null
+     * @return User|object
+     * @throws NotFoundException
      */
-    public function findDetail(string $id): ?DetailView
+    public function get(string $id): User
     {
-
-        $stmt = $this->connection->createQueryBuilder()
-            ->select(
-                'id',
-                'email',
-                'role',
-                'name_first first_name',
-                'name_last last_name',
-                'status'
-            )
-            ->from('user_users')
-            ->where('id = :id')
-            ->setParameter(':id', $id)
-            ->execute();
-
-        $stmt->setFetchMode(FetchMode::CUSTOM_OBJECT, DetailView::class);
-
-        /** @var DetailView $view */
-        $view = $stmt->fetch();
-
-        $stmt = $this->connection->createQueryBuilder()
-            ->select('network, identity')
-            ->from('user_user_networks')
-            ->where('user_id = :id')
-            ->setParameter(':id', $id)
-            ->execute();
-
-        $stmt->setFetchMode(FetchMode::CUSTOM_OBJECT, NetworkView::class);
-
-
-        $view->networks = $stmt->fetchAll();
-
-        return $view;
+        if (!$user = $this->repository->find($id)) {
+            throw new NotFoundException('User not found.');
+        }
+        return $user;
     }
 
     /**

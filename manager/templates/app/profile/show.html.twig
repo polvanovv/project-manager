@@ -20,7 +20,7 @@
                 <tr>
                     <th>Email</th>
                     <td>
-                        {{ user.email }}
+                        {{ user.email ? user.email.value : ''}}
                         <a href="{{ path('profile_email') }}" class="btn btn-sm btn-outline-primary"><span
                                     class="fa fa-pencil"></span></a>
                     </td>
@@ -28,7 +28,7 @@
                 <tr>
                     <th>Name</th>
                     <td>
-                        {{ user.first_name }} {{ user.last_name }}
+                        {{ user.name.full }}
                         <a href="{{ path('profile_name_edit') }}" class="btn btn-sm btn-outline-primary"><span
                                     class="fa fa-pencil"></span></a>
                     </td>
@@ -39,11 +39,11 @@
                 </tr>
                 <tr>
                     <th>Created</th>
-                    <td>{{ user.date|date('Y-m-d H:i:s') }}</td>
+                    <td>{{ user.createdAt|date('Y-m-d H:i:s') }}</td>
                 </tr>
                 <tr>
                     <th>Role</th>
-                    <td>{{ user_role(user.role) }}</td>
+                    <td>{{ user_role(user.role.name) }}</td>
                 </tr>
                 <tr>
                     <th>Status</th>
