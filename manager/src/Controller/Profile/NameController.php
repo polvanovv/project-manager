@@ -52,11 +52,11 @@ class NameController extends AbstractController
      */
     public function edit(Request $request, Name\Handler $handler)
     {
-        $user = $this->fetcher->findDetail($this->getUser()->getId());
+        $user = $this->fetcher->get($this->getUser()->getId());
 
-        $command = new Name\Command($user->id);
-        $command->firstName = $user->first_name;
-        $command->lastName = $user->last_name;
+        $command = new Name\Command($user->getId()->getValue());
+        $command->firstName = $user->getName()->getFirst();
+        $command->lastName = $user->getName()->getLast();
 
         $form = $this->createForm(Name\Form::class, $command);
         $form->handleRequest($request);

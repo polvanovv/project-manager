@@ -13,6 +13,7 @@ use App\Model\User\UseCase\Block;
 use App\Model\User\Entity\User\User;
 use App\ReadModel\User\Filter;
 use App\ReadModel\User\UserFetcher;
+use App\ReadModel\Work\Members\Member\MemberFetcher;
 use Psr\Log\LoggerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -264,10 +265,13 @@ class UsersController extends AbstractController
      * @param User $user
      * @return Response
      */
-    public function show(User $user): Response
+    public function show(User $user, MemberFetcher $memberFetcher): Response
     {
+        $member = $memberFetcher->find($user->getId()->getValue());
+
         return $this->render('app/users/show.html.twig', [
             'user' => $user,
+            'member' => $member
         ]);
     }
 

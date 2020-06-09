@@ -57,7 +57,7 @@ class Command
 
         $command->firstName = $user->getName()->getFirst();
         $command->lastName = $user->getName()->getLast();
-        $command->email = $user->getEmail()->getValue();
+        $command->email = $user->getEmail() ? $user->getEmail()->getValue() : '';
 
         return $command;
     }

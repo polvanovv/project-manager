@@ -34,4 +34,18 @@ class GroupFetcher
         return $stmt->fetchAll(FetchMode::ASSOCIATIVE);
 
     }
+
+    public function assoc()
+    {
+        $stmt = $this->connection->createQueryBuilder()
+            ->select(
+                'id',
+                'name'
+            )
+            ->from('work_members_group')
+            ->orderBy('name')
+            ->execute();
+
+        return $stmt->fetchAll(\PDO::FETCH_KEY_PAIR);
+    }
 }

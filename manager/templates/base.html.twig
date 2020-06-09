@@ -27,6 +27,11 @@
                     <i class="c-sidebar-nav-icon icon-people"></i> Groups
                 </a>
             </li>
+            <li class="c-sidebar-nav-item">
+                <a class="c-sidebar-nav-link" href="{{ path('work_members') }}">
+                    <i class="c-sidebar-nav-icon icon-people"></i> Members
+                </a>
+            </li>
         {% endif %}
         <li class="c-sidebar-nav-label">Control</li>
         {% if is_granted('ROLE_MANAGE_USERS') %}
