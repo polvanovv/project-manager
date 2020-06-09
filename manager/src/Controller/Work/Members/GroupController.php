@@ -46,7 +46,9 @@ class GroupController extends AbstractController
     {
         $groups = $fetcher->all();
 
-        return $this->render('app/work/members/group/index.html.twig', compact($groups));
+        return $this->render('app/work/members/groups/index.html.twig', [
+            'groups' => $groups,
+        ]);
     }
 
     /**
@@ -72,7 +74,7 @@ class GroupController extends AbstractController
                 $this->addFlash('error', $e->getMessage());
             }
         }
-        return $this->render('app/work/members/group/create.html.twig', [
+        return $this->render('app/work/members/groups/create.html.twig', [
             'form' => $form->createView(),
         ]);
     }
@@ -102,13 +104,14 @@ class GroupController extends AbstractController
                 $this->addFlash('error', $e->getMessage());
             }
         }
-        return $this->render('app/work/members/group/edit.html.twig', [
-            'form' => $form->createView()
+        return $this->render('app/work/members/groups/edit.html.twig', [
+            'form' => $form->createView(),
+            'group' => $group
         ]);
     }
 
     /**
-     * @Route("/delete", name="_delete")
+     * @Route("{id}/delete", name="_delete")
      *
      * @param Group $group
      * @param Request $request
@@ -118,7 +121,7 @@ class GroupController extends AbstractController
     public function delete(Group $group,Request $request, Remove\Handler $handler)
     {
         if (!$this->isCsrfTokenValid('delete', $request->request->get('token'))) {
-            return $this->redirectToRoute('work_members_groups_edit', ['id' => $group->getId()]);
+            return $this->redirectToRoute('work_members_groups');
         }
 
         $command = new Remove\Command($group->getId());
@@ -131,6 +134,6 @@ class GroupController extends AbstractController
             $this->addFlash('error', $e->getMessage());
         }
 
-        return $this->redirectToRoute('work_members_groups_edit', ['id' => $group->getId()]);
+        return $this->redirectToRoute('work_members_groups');
     }
 }

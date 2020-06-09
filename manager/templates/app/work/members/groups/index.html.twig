@@ -1,10 +1,10 @@
-{% extends "base.twig.html" %}
+{% extends 'base.html.twig' %}
 {% block title %}Groups{% endblock %}
 
 {% block breadcrumbs %}
     <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="{{ path('/') }}">Home</a></li>
-        <li class="breadcrumb-item"><a href="{{ path('/work') }}">Work</a></li>
+        <li class="breadcrumb-item"><a href="{{ path('home') }}">Home</a></li>
+        <li class="breadcrumb-item"><a href="{{ path('work') }}">Work</a></li>
         <li class="breadcrumb-item active">Groups</li>
     </ol>
 {% endblock %}
@@ -22,16 +22,16 @@
                 </tr>
             </thead>
             <tbody>
-            {% set token = csfr_token('delete') %}
+            {% set token = csrf_token('delete') %}
             {% for group in groups %}
                 <tr>
                     <td>{{ group.name }}</td>
                     <td>
                         <div class="d-flex flex-row">
-                            <a href="{{ path('work_members_groups_edit', {'id': group.id})}}" class="btn btn-primary mr-1"><span class="fa fa-pencil"></span></a>
-                            <form action="{{ path('work.members.groups.delete', {'id': group.id}) }}" method="post" onsubmit="return confirm('Are you sure?')">
+                            <a href="{{ path('work_members_groups_edit', {'id': group.id})}}" class="btn btn-sm btn-primary mr-1"><span class="fa fa-pencil"></span></a>
+                            <form action="{{ path('work_members_groups_delete', {'id': group.id}) }}" method="post" onsubmit="return confirm('Are you sure?')">
                                 <input type="hidden" name="token" value="{{ token }}" />
-                                <button type="submit" class="btn btn-sm btn-danger"><span class="fa fa-trash"></span></button>
+                                <button type="submit" class="btn btn-sm btn-danger mr-1"><span class="fa fa-trash"></span></button>
                             </form>
                         </div>
                     </td>

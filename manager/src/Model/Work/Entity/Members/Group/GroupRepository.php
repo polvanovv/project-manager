@@ -40,7 +40,7 @@ class GroupRepository
     public function get(Id $id): Group
     {
         if (!$group = $this->repo->find($id->getValue())) {
-            throw new EntityNotFoundException('Group is not foung');
+            throw new EntityNotFoundException('Group is not found');
         }
 
         return $group;
