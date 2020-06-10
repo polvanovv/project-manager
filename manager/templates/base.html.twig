@@ -23,11 +23,6 @@
         <li class="c-sidebar-nav-label">Work</li>
         {% if is_granted('ROLE_WORK_MANAGE_MEMBERS') %}
             <li class="c-sidebar-nav-item">
-                <a class="c-sidebar-nav-link" href="{{ path('work_members_groups') }}">
-                    <i class="c-sidebar-nav-icon icon-people"></i> Groups
-                </a>
-            </li>
-            <li class="c-sidebar-nav-item">
                 <a class="c-sidebar-nav-link" href="{{ path('work_members') }}">
                     <i class="c-sidebar-nav-icon icon-people"></i> Members
                 </a>
