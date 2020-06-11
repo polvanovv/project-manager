@@ -15,31 +15,7 @@
     <div class="c-sidebar-brand d-md-down-none">
         <span class="">Main logo</span>
     </div>
-    <ul class="c-sidebar-nav">
-        <li class="c-sidebar-nav-item">
-            <a class="c-sidebar-nav-link" href="{{ path('home') }}">
-               <i class="c-sidebar-nav-icon icon-speedometer"></i>Dashboard</a>
-        </li>
-        <li class="c-sidebar-nav-label">Work</li>
-        {% if is_granted('ROLE_WORK_MANAGE_MEMBERS') %}
-            <li class="c-sidebar-nav-item">
-                <a class="c-sidebar-nav-link" href="{{ path('work_members') }}">
-                    <i class="c-sidebar-nav-icon icon-people"></i> Members
-                </a>
-            </li>
-        {% endif %}
-        <li class="c-sidebar-nav-label">Control</li>
-        {% if is_granted('ROLE_MANAGE_USERS') %}
-        <li class="c-sidebar-nav-item">
-            <a class="c-sidebar-nav-link" href="{{ path('users') }}">
-                <i class="c-sidebar-nav-icon icon-user"></i>Users</a>
-        </li>
-        {% endif %}
-        <li class="c-sidebar-nav-item">
-            <a class="c-sidebar-nav-link" href="{{ path('profile') }}">
-                <i class="c-sidebar-nav-icon icon-user"></i>Profile</a>
-        </li>
-    </ul>
+    {{ knp_menu_render('sidebar', {'currentClass': 'c-active'}) }}
     <button class="c-sidebar-minimizer c-class-toggler" type="button" data-target="_parent"
             data-class="c-sidebar-unfoldable">
     </button>
@@ -69,18 +45,17 @@
                 </div>
 
 
-
             </li>
         </ul>
     </header>
     {% block breadcrumbs %}
-    <div class="c-subheader justify-content-between px-3">
-        <ol class="breadcrumb border-0 m-0 px-0 px-md-3">
-            <li class="breadcrumb-item"><a href="{{ path('home') }}">Home</a></li>
-            <li class="breadcrumb-item active">Dashboard</li>
-        </ol>
-    </div>
-        {% endblock %}
+        <div class="c-subheader justify-content-between px-3">
+            <ol class="breadcrumb border-0 m-0 px-0 px-md-3">
+                <li class="breadcrumb-item"><a href="{{ path('home') }}">Home</a></li>
+                <li class="breadcrumb-item active">Dashboard</li>
+            </ol>
+        </div>
+    {% endblock %}
     <div class="c-body">
         <main class="c-main">
             <div class="container-fluid">

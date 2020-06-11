@@ -44,6 +44,10 @@ services:
         factory: ['App\Container\Model\User\Service\ResetTokenizerFactory', 'create']
         arguments: ['PT1H']
 
+    App\Menu\SidebarMenu:
+        tags:
+            - { name: knp_menu.menu_builder, method: build, alias: sidebar }
+
     Redis:
         class: Redis
         calls:
