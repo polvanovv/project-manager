@@ -13,6 +13,8 @@ use Doctrine\Common\Persistence\ObjectManager;
 
 class UserFixtures extends Fixture
 {
+    public const REFERENCE_ADMIN = 'user_user_admin';
+    public const REFERENCE_USER = 'user_user_user';
 
     /**
      * @var PasswordHasher
@@ -28,20 +30,74 @@ class UserFixtures extends Fixture
     {
         $hash = $this->hasher->hash('password');
 
-        $user = User::signUpByEmail(
-            Id::next(),
-            new \DateTimeImmutable(),
-            new Name(' ', ' '),
-            new Email('test@test.com'),
-            $hash,
-            'token'
+        $admin = $this->createAdminByEmail(
+            new Name('James', 'Bond'),
+            new Email('james@app.com'),
+            $hash
         );
+        $manager->persist($admin);
+        $this->setReference(self::REFERENCE_ADMIN, $admin);
 
-        $user->confirmSignUp();
-        $user->changeRole(Role::admin());
+        $confirmed = $this->createSignUpConfirmedByEmail(
+            new Name('Shone', 'Bean'),
+            new Email('shone@app.com'),
+            $hash
+        );
+        $manager->persist($confirmed);
+        $this->setReference(self::REFERENCE_USER, $confirmed);
 
+        $network = $this->createSignedUpByNetwork(
+            new Name('Tom', 'Ser'),
+            'facebook',
+            '10000001'
+        );
+        $manager->persist($network);
+
+        $user = $this->createSignUpRequestedByEmail(
+            new Name('Vasilyi', 'Alibabaevich'),
+            new Email('vasia@app.com'),
+            $hash
+        );
         $manager->persist($user);
 
         $manager->flush();
+    }
+
+    private function createAdminByEmail(Name $name, Email $email, $hash)
+    {
+        $user = $this->createSignUpConfirmedByEmail($name, $email, $hash);
+        $user->changeRole(Role::admin());
+
+        return $user;
+    }
+
+    private function createSignUpConfirmedByEmail(Name $name, Email $email, $hash)
+    {
+        $user = $this->createSignUpRequestedByEmail($name, $email, $hash);
+        $user->confirmSignUp();
+
+        return $user;
+    }
+
+    private function createSignUpRequestedByEmail(Name $name, Email $email, $hash)
+    {
+        return User::signUpByEmail(
+            Id::next(),
+            new \DateTimeImmutable(),
+            $name,
+            $email,
+            $hash,
+            'token');
+    }
+
+    private function createSignedUpByNetwork(Name $name, string $network, string $identity)
+    {
+        return User::signUpByNetwork(
+            Id::next(),
+            new \DateTimeImmutable(),
+            $name,
+            $network,
+            $identity
+        );
     }
 }
