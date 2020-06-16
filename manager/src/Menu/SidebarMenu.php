@@ -37,6 +37,15 @@ class SidebarMenu
 
         $menu->addChild('Work')->setAttribute('class', 'c-sidebar-nav-label');
 
+        $menu->addChild('Projects', ['route' => 'work_projects'])
+            ->setExtra('routes', [
+                ['route' => 'work_projects'],
+                ['pattern' => '/^work\.projects_.+/']
+            ])
+            ->setExtra('icon', 'c-sidebar-nav-icon icon-briefcase')
+            ->setAttribute('class', 'c-sidebar-nav-item')
+            ->setLinkAttribute('class', 'c-sidebar-nav-link');
+
         if ($this->auth->isGranted('ROLE_WORK_MANAGE_MEMBERS')) {
             $menu->addChild('Members', ['route' => 'work_members'])
                 ->setExtra('routes', [
