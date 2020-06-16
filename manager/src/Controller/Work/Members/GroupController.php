@@ -70,7 +70,7 @@ class GroupController extends AbstractController
                 $handler->handle($command);
                 return $this->redirectToRoute('work_members_groups');
             } catch (\DomainException $e) {
-                $this->logger->error($e->getMessage(), ['exception' => $e]);
+                $this->logger->warning($e->getMessage(), ['exception' => $e]);
                 $this->addFlash('error', $e->getMessage());
             }
         }
@@ -100,7 +100,7 @@ class GroupController extends AbstractController
                 $handler->handle($command);
                 return $this->redirectToRoute('work_members_groups_edit', ['id' => $group->getId()]);
             } catch (\DomainException $e) {
-                $this->logger->error($e->getMessage(), ['exception' => $e]);
+                $this->logger->warning($e->getMessage(), ['exception' => $e]);
                 $this->addFlash('error', $e->getMessage());
             }
         }
@@ -130,7 +130,7 @@ class GroupController extends AbstractController
             $handler->handle($command);
             $this->redirectToRoute('work_members_groups');
         } catch (\DomainException $e) {
-            $this->logger->error($e->getMessage(), ['exception'=>$e]);
+            $this->logger->warning($e->getMessage(), ['exception'=>$e]);
             $this->addFlash('error', $e->getMessage());
         }
 

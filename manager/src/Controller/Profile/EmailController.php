@@ -59,7 +59,7 @@ class EmailController extends AbstractController
 
                 return $this->redirectToRoute('profile');
             } catch (\DomainException $e) {
-                $this->logger->error($e->getMessage(), ['exception' => $e]);
+                $this->logger->warning($e->getMessage(), ['exception' => $e]);
                 $this->addFlash('error', $e->getMessage());
             }
         }
@@ -89,7 +89,7 @@ class EmailController extends AbstractController
 
             return $this->redirectToRoute('profile');
         } catch (\DomainException $e) {
-            $this->logger->error($e->getMessage(), ['exception' => $e]);
+            $this->logger->warning($e->getMessage(), ['exception' => $e]);
             $this->addFlash('error', $e->getMessage());
 
             return $this->redirectToRoute('profile');
