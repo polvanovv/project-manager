@@ -3,7 +3,7 @@
 
 namespace App\Controller\Work\Projects\Project;
 
-
+use App\Annotations\Guid;
 use App\Model\Work\Entity\Projects\Project\Project;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -15,7 +15,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class ProjectController extends AbstractController
 {
     /**
-     * @Route("", name="_show")
+     * @Route("", name="_show", requirements={"id"=Guid::PATTERN})
      * @param Project $project
      * @return Response
      */

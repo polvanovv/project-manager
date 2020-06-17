@@ -13,8 +13,8 @@ class Project
 {
     /**
      * @var Id
-     * @ORM\Column(type="work_projects_project_id")
      * @ORM\Id
+     * @ORM\Column(type="work_projects_project_id")
      */
     private $id;
     /**

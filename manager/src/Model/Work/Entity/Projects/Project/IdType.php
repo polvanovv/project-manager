@@ -12,9 +12,7 @@ use Doctrine\DBAL\Types\GuidType;
  */
 class IdType extends GuidType
 {
-    /**
-     *
-     */
+
     public const NAME = 'work_projects_project_id';
 
     /**

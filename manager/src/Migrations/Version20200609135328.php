@@ -28,14 +28,6 @@ final class Version20200609135328 extends AbstractMigration
         $this->addSql('COMMENT ON COLUMN work_members_members.group_id IS \'(DC2Type:work_members_group_id)\'');
         $this->addSql('COMMENT ON COLUMN work_members_members.status IS \'(DC2Type:work_members_member_status)\'');
         $this->addSql('ALTER TABLE work_members_members ADD CONSTRAINT FK_30039B6DFE54D947 FOREIGN KEY (group_id) REFERENCES work_members_group (id) NOT DEFERRABLE INITIALLY IMMEDIATE');
-        $this->addSql('ALTER TABLE user_users ALTER id TYPE UUID');
-        $this->addSql('ALTER TABLE user_users ALTER id DROP DEFAULT');
-        $this->addSql('ALTER TABLE user_users ALTER email TYPE VARCHAR(255)');
-        $this->addSql('ALTER TABLE user_users ALTER email DROP DEFAULT');
-        $this->addSql('ALTER TABLE user_users ALTER role TYPE VARCHAR(255)');
-        $this->addSql('ALTER TABLE user_users ALTER role DROP DEFAULT');
-        $this->addSql('ALTER TABLE user_user_networks ALTER user_id TYPE UUID');
-        $this->addSql('ALTER TABLE user_user_networks ALTER user_id DROP DEFAULT');
     }
 
     public function down(Schema $schema) : void
@@ -43,15 +35,6 @@ final class Version20200609135328 extends AbstractMigration
         // this down() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
 
-        $this->addSql('CREATE SCHEMA public');
         $this->addSql('DROP TABLE work_members_members');
-        $this->addSql('ALTER TABLE user_user_networks ALTER user_id TYPE UUID');
-        $this->addSql('ALTER TABLE user_user_networks ALTER user_id DROP DEFAULT');
-        $this->addSql('ALTER TABLE user_users ALTER id TYPE UUID');
-        $this->addSql('ALTER TABLE user_users ALTER id DROP DEFAULT');
-        $this->addSql('ALTER TABLE user_users ALTER email TYPE VARCHAR(255)');
-        $this->addSql('ALTER TABLE user_users ALTER email DROP DEFAULT');
-        $this->addSql('ALTER TABLE user_users ALTER role TYPE VARCHAR(255)');
-        $this->addSql('ALTER TABLE user_users ALTER role DROP DEFAULT');
     }
 }

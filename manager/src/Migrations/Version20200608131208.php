@@ -37,7 +37,6 @@ final class Version20200608131208 extends AbstractMigration
         // this down() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
 
-        $this->addSql('CREATE SCHEMA public');
         $this->addSql('ALTER TABLE user_user_networks ALTER user_id TYPE UUID');
         $this->addSql('ALTER TABLE user_user_networks ALTER user_id DROP DEFAULT');
         $this->addSql('ALTER TABLE user_users ALTER id TYPE UUID');
