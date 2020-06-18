@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Projects{% endblock %}
+{% block title %}Department{% endblock %}
 
 {% block breadcrumbs %}
     <ol class="breadcrumb">
@@ -9,6 +9,7 @@
         <li class="breadcrumb-item"><a href="{{ path('work_projects') }}">Projects</a></li>
         <li class="breadcrumb-item"><a href="{{ path('work_projects_project_show', {'id': project.id}) }}">{{ project.name }}</a></li>
         <li class="breadcrumb-item"><a href="{{ path('work_projects_project_settings', {'project_id': project.id}) }}">Settings</a></li>
+        <li class="breadcrumb-item"><a href="{{ path('work_projects_project_settings_departments', {'project_id': project.id}) }}">Departments</a></li>
         <li class="breadcrumb-item active">Edit</li>
     </ol>
 {% endblock %}
