@@ -40,7 +40,7 @@ class Handler
      */
     public function handle(Command $command): void
     {
-        $project = $this->projectRepository->get(new Id($command->id));
+        $project = $this->projectRepository->get(new Id($command->project));
 
         $project->editDepartment(new DepartmentId($command->id), $command->name);
 

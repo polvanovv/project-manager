@@ -66,4 +66,12 @@ class Department
         return $this->name;
     }
 
+    /**
+     * @param $name
+     * @return string
+     */
+    public function edit($name): string
+    {
+        return $this->name = $name;
+    }
 }

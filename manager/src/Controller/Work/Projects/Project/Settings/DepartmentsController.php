@@ -2,6 +2,7 @@
 
 namespace App\Controller\Work\Projects\Project\Settings;
 
+use App\Annotations\Guid;
 use App\Model\Work\Entity\Projects\Project\Department\Id;
 use App\Model\Work\Entity\Projects\Project\Project;
 use Psr\Log\LoggerInterface;
@@ -80,7 +81,7 @@ class DepartmentsController extends AbstractController
     }
 
     /**
-     * @Route("/edit", name="_edit")
+     * @Route("{id}/edit", name="_edit")
      * @param Project $project
      * @param string $id
      * @param Request $request
@@ -90,7 +91,7 @@ class DepartmentsController extends AbstractController
     public function edit(Project $project, string $id, Request $request, Edit\Handler $handler): Response
     {
         $department = $project->getDepartment(new Id($id));
-        $command = new Edit\Command($project->getId()->getValue(), $department);
+        $command = Edit\Command::fromDepartment($project, $department);
 
         $form = $this->createForm(Edit\Form::class, $command);
         $form->handleRequest($request);
@@ -98,7 +99,7 @@ class DepartmentsController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             try {
                 $handler->handle($command);
-                return $this->redirectToRoute('work_projects_project_settings_departments_show', ['project_id' =>$project->getId(), 'id' => $id]);
+                return $this->redirectToRoute('work_projects_project_settings_departments', ['project_id' => $project->getId(), 'id' => $id]);
             } catch (\DomainException $e) {
                 $this->logger->warning($e->getMessage(), ['exception' => $e]);
                 $this->addFlash('error', $e->getMessage());
@@ -112,7 +113,7 @@ class DepartmentsController extends AbstractController
     }
 
     /**
-     * @Route("/delete", name="_delete")
+     * @Route("{id}/delete", name="_delete")
      * 
      * @param Project $project
      * @param string $id
@@ -122,7 +123,7 @@ class DepartmentsController extends AbstractController
      */
     public function delete(Project $project, string $id, Request $request, Remove\Handler $handler): Response
     {
-        if ($this->isCsrfTokenValid('delete', $request->$request->get('token'))) {
+        if (!$this->isCsrfTokenValid('delete', $request->request->get('token'))) {
             return $this->redirectToRoute('work_projects_project_settings_departments', ['project_id' => $project->getId()]);
         }
 
@@ -140,12 +141,12 @@ class DepartmentsController extends AbstractController
     }
 
     /**
-     * @Route("/show", name="_show")
+     * @Route("/{id}", name="_show", requirements={"id"=Guid::PATTERN})
      * @param Project $project
      * @return Response
      */
     public function show(Project $project): Response
     {
-        return $this->redirectToRoute('work.projects.project.settings.departments', ['project_id' => $project->getId()]);
+        return $this->redirectToRoute('work_projects_project_settings_departments', ['project_id' => $project->getId()]);
     }
 }
