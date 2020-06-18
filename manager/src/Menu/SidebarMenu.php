@@ -40,7 +40,7 @@ class SidebarMenu
         $menu->addChild('Projects', ['route' => 'work_projects'])
             ->setExtra('routes', [
                 ['route' => 'work_projects'],
-                ['pattern' => '/^work\.projects_.+/']
+                ['pattern' => '/^work_projects_.+/']
             ])
             ->setExtra('icon', 'c-sidebar-nav-icon icon-briefcase')
             ->setAttribute('class', 'c-sidebar-nav-item')
