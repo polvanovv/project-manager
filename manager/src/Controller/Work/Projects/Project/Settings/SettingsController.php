@@ -3,7 +3,7 @@
 
 namespace App\Controller\Work\Projects\Project\Settings;
 
-use App\Annotation\Guid;
+use App\Annotations\Guid;
 use App\Model\Work\Entity\Projects\Project\Project;
 use App\Model\Work\UseCase\Projects\Project\Archive;
 use App\Model\Work\UseCase\Projects\Project\Edit;
@@ -58,7 +58,7 @@ class SettingsController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             try {
                 $handler->handle($command);
-                return $this->redirectToRoute('work_projects_project_show', ['project_id' => $project->getId()]);
+                return $this->redirectToRoute('work_projects_project_show', ['id' => $project->getId()]);
             } catch (\DomainException $e) {
                 $this->logger->warning($e->getMessage(), ['exception' => $e]);
                 $this->addFlash('error', $e->getMessage());
