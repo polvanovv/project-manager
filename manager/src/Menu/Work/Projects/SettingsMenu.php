@@ -1,7 +1,7 @@
 <?php
 
 
-namespace App\Menu\Work;
+namespace App\Menu\Work\Projects;
 
 
 use Knp\Menu\FactoryInterface;
@@ -45,6 +45,18 @@ class SettingsMenu
                 ->setExtra('routes', [
                     ['route' => 'work_projects_project_settings_departments'],
                     ['pattern' => '/^work_projects_project_settings_departments_.+/']
+                ])
+                ->setAttribute('class', 'nav-item')
+                ->setLinkAttribute('class', 'nav-link');
+
+            $menu
+                ->addChild('Members', [
+                    'route' => 'work_projects_project_settings_membership',
+                    'routeParameters' => ['project_id' => $options['project_id']]
+                ])
+                ->setExtra('routes', [
+                    ['route' => 'work_projects_project_settings_membership'],
+                    ['pattern' => '/^work_projects_project_settings_membership_.+/']
                 ])
                 ->setAttribute('class', 'nav-item')
                 ->setLinkAttribute('class', 'nav-link');
