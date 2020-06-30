@@ -23,6 +23,7 @@ services:
     App\Model\Work\Entity\Members\Group\GroupRepository: ~
     App\Model\Work\Entity\Members\Member\MemberRepository: ~
     App\Model\Work\Entity\Projects\Project\ProjectRepository: ~
+    App\Model\Work\Entity\Projects\Role\RoleRepository: ~
 
     # controllers are imported separately to make sure services can be injected
     # as action arguments even if you don't extend any base controller class
@@ -48,10 +49,13 @@ services:
     App\Menu\SidebarMenu:
         tags: [{ name: knp_menu.menu_builder, method: build, alias: sidebar }]
 
-    App\Menu\Work\ProjectMenu:
+    App\Menu\Work\MainMenu:
+        tags: [{ name: knp_menu.menu_builder, method: build, alias: work_main }]
+
+    App\Menu\Work\Projects\ProjectMenu:
             tags: [{ name: knp_menu.menu_builder, method: build, alias: work_project }]
 
-    App\Menu\Work\SettingsMenu:
+    App\Menu\Work\Projects\SettingsMenu:
         tags: [{ name: knp_menu.menu_builder, method: build, alias: work_project_settings }]
 
     Redis:

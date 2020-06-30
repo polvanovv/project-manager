@@ -66,9 +66,9 @@ class MemberRepository
 
     /**
      * @param Id $id
-     * @return object|null
+     * @return Member|object
      */
-    public function get(Id $id)
+    public function get(Id $id): ?Member
     {
         if (!$member = $this->repo->find($id->getValue())) {
             throw new EntityNotFoundException('Member is not found.');

@@ -44,6 +44,15 @@ class Id
     }
 
     /**
+     * @param Id $other
+     * @return bool
+     */
+    public function isEqual(self $other)
+    {
+        return $this->getValue() === $other->getValue();
+    }
+
+    /**
      * @return string
      */
     public function __toString(): string

@@ -4,6 +4,7 @@
 namespace App\Controller\Work\Projects;
 
 
+use App\Model\User\Entity\User\Role;
 use App\Model\Work\UseCase\Projects\Project\Create;
 use App\ReadModel\Work\Projects\Project\Filter;
 use App\ReadModel\Work\Projects\Project\ProjectFetcher;
@@ -35,7 +36,11 @@ class ProjectsController extends AbstractController
      */
     public function index(Request $request, ProjectFetcher $fetcher): Response
     {
-        $filter = new Filter\Filter();
+        if ($this->isGranted('ROLE_WORK_MANAGE_PROJECTS')) {
+            $filter = Filter\Filter::all();
+        } else {
+            $filter = Filter\Filter::forMember($this->getuser()->getId());
+        }
 
         $form = $this->createForm(Filter\Form::class, $filter);
         $form->handleRequest($request);
