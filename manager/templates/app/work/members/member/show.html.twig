@@ -53,5 +53,25 @@
             </tbody>
         </table>
     </div>
+    <div class="box">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <td>Project</td>
+                    <td>Department</td>
+                </tr>
+            </thead>
+            <tbody>
+            {% for department in departments %}
+                <tr>
+                    <td><a href="{{ path('work_projects_project_show', {id: department.project_id}) }}">{{ department.project_name }}</a></td>
+                    <td>{{ department.department_name }}</td>
+                </tr>
+
+            {% endfor %}
+            </tbody>
+        </table>
+
+    </div>
 
 {% endblock %}

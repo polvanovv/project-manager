@@ -12,6 +12,7 @@ use App\Model\Work\UseCase\Members\Member\Create;
 use App\Model\Work\UseCase\Members\Member\Move;
 use App\ReadModel\Work\Members\Member\Filter;
 use App\ReadModel\Work\Members\Member\MemberFetcher;
+use App\ReadModel\Work\Projects\Project\DepartmentFetcher;
 use Psr\Log\LoggerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -219,8 +220,10 @@ class MembersController extends AbstractController
      * @param Member $member
      * @return Response
      */
-    public function show(Member $member): Response
+    public function show(Member $member, DepartmentFetcher $departmentFetcher): Response
     {
-        return $this->render('app/work/members/member/show.html.twig', compact('member'));
+        $departments = $departmentFetcher->allOfMember($member->getId()->getValue());
+
+        return $this->render('app/work/members/member/show.html.twig', compact('member', 'departments'));
     }
 }

@@ -64,4 +64,25 @@ class DepartmentFetcher
 
         return $stmt->fetchAll(\PDO::FETCH_KEY_PAIR);
     }
+
+    public function allOfMember(string $member)
+    {
+        $stmt = $this->connection->createQueryBuilder()
+            ->select(
+                'p.id as project_id',
+                'p.name as project_name',
+                'd.id as department_id',
+                'd.name as department_name'
+            )
+            ->from('work_projects_project_memberships', 'ms')
+            ->innerJoin('ms', 'work_projects_project_memberships_department', 'msd', 'ms.id = msd.membership_id')
+            ->innerJoin('msd', 'work_projects_project_departments', 'd', 'msd.department_id = d.id')
+            ->innerJoin('d', 'work_projects_projects', 'p', 'd.project_id = p.id')
+            ->andWhere('ms.member_id = :member')
+            ->setParameter(':member', $member)
+            ->orderBy('p.sort')->addOrderBy('d.name')
+            ->execute();
+
+        return $stmt->fetchAll(FetchMode::ASSOCIATIVE);
+    }
 }
