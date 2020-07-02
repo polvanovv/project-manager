@@ -1,0 +1,58 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Projects{% endblock %}
+
+{% block breadcrumbs %}
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{{ path('home') }}">Home</a></li>
+        <li class="breadcrumb-item"><a href="{{ path('work') }}">Work</a></li>
+        <li class="breadcrumb-item"><a href="{{ path('work_projects') }}">Projects</a></li>
+        <li class="breadcrumb-item"><a href="{{ path('work_projects_project_show', {'id': project.id}) }}">{{ project.name }}</a></li>
+        <li class="breadcrumb-item"><a href="{{ path('work_projects_project_settings', {'project_id': project.id}) }}">Settings</a></li>
+        <li class="breadcrumb-item active">Department</li>
+    </ol>
+{% endblock %}
+
+{% block body %}
+
+    {% include 'app/work/projects/project/_tabs.html.twig' %}
+
+    {% include 'app/work/projects/project/settings/_tabs.html.twig' %}
+
+    <div class="controls">
+        <a href="{{ path('work_projects_project_settings_departments_create', {'project_id': project.id}) }}" class="btn btn-success">Add Department</a>
+    </div>
+
+    <div class="box">
+        <table class="table table-bordered table-hover">
+            <thead>
+                <tr>
+                    <th>Department</th>
+                    <th>Members</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+            {% set token = csrf_token('delete') %}
+            {% for department in  departments %}
+                    <tr>
+                        <td>{{ department.name }}</td>
+                        <td>{{ department.members_count }}</td>
+                        <td>
+                            <div class="d-flex flex-row">
+                                <a class="btn btn-sm btn-primary mr-1" href="{{ path('work_projects_project_settings_departments_edit', {'project_id': project.id, 'id': department.id}) }}">
+                                    <span class="fa fa-pencil"></span>
+                                </a>
+                                <form action="{{ path('work_projects_project_settings_departments_delete', {'project_id': project.id, 'id': department.id}) }}" method="post" onclick="return confirm('Are you sure to delete?')">
+                                <input type="hidden" name="token" value="{{ token }}">
+                                <button type="submit" class="btn btn-sm btn-danger"><span class="fa fa-trash"></span></button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+{% endblock %}

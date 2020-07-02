@@ -36,12 +36,16 @@ class ShowController extends AbstractController
 
     /**
      * @Route("/profile", name="profile")
+     *
      * @return Response
+     * @throws \App\ReadModel\NotFoundException
      */
     public function show(): Response
     {
-        $user = $this->fetcher->findDetail($this->getUser()->getId());
+        $user = $this->fetcher->get($this->getUser()->getId());
 
-        return $this->render('app/profile/show.html.twig', compact('user'));
+        return $this->render('app/profile/show.html.twig', [
+            'user' => $user,
+        ]);
     }
 }

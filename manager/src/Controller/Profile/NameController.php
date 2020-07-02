@@ -1,12 +1,12 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace App\Controller\Profile;
 
 
+use App\Controller\ErrorHandler;
 use App\ReadModel\User\UserFetcher;
-use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -30,16 +30,16 @@ class NameController extends AbstractController
      * @var UserFetcher
      */
     private $fetcher;
-
     /**
-     * @var LoggerInterface
+     * @var ErrorHandler
      */
-    private $logger;
+    private $errorHandler;
 
-    public function __construct(UserFetcher $fetcher, LoggerInterface $logger)
+
+    public function __construct(UserFetcher $fetcher, ErrorHandler $errorHandler)
     {
         $this->fetcher = $fetcher;
-        $this->logger = $logger;
+        $this->errorHandler = $errorHandler;
     }
 
 
@@ -52,27 +52,27 @@ class NameController extends AbstractController
      */
     public function edit(Request $request, Name\Handler $handler)
     {
-        $user = $this->fetcher->findDetail($this->getUser()->getId());
+        $user = $this->fetcher->get($this->getUser()->getId());
 
-        $command = new Name\Command($user->id);
-        $command->firstName = $user->first_name;
-        $command->lastName = $user->last_name;
+        $command = new Name\Command($user->getId()->getValue());
+        $command->firstName = $user->getName()->getFirst();
+        $command->lastName = $user->getName()->getLast();
 
         $form = $this->createForm(Name\Form::class, $command);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             try {
-                    $handler->handle($command);
+                $handler->handle($command);
 
                 return $this->redirectToRoute('profile');
             } catch (\DomainException $e) {
-                $this->logger->error($e->getMessage(), ['exception' => $e]);
+                $this->errorHandler->handle($e);
                 $this->addFlash('error', $e->getMessage());
             }
         }
 
-        return $this->render('app/profile/name.html.twig',[
+        return $this->render('app/profile/name.html.twig', [
             'form' => $form->createView()
         ]);
     }

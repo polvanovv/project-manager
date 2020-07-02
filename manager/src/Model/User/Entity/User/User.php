@@ -356,7 +356,7 @@ class User
     /**
      * @return Email
      */
-    public function getEmail(): Email
+    public function getEmail(): ?Email
     {
         return $this->email;
     }

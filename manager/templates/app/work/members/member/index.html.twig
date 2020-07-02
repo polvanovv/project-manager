@@ -1,0 +1,60 @@
+{% extends "base.html.twig" %}
+{% block title %}Members{% endblock %}
+
+{% block breadcrumbs %}
+    <div class="c-subheader justify-content-between px-3">
+        <ol class="breadcrumb border-0 m-0 px-0 px-md-3">
+            <li class="breadcrumb-item"><a href="{{ path('home') }}">Home</a></li>
+            <li class="breadcrumb-item"><a href="{{ path('work') }}">Work</a></li>
+            <li class="breadcrumb-item active">Members</li>
+        </ol>
+    </div>
+{% endblock %}
+{% block body %}
+    {% include 'app/work/members/member/_tabs.html.twig' %}
+    <div>
+        {{ form_start(form) }}
+        <div class="row">
+            <div class="col-md-2">{{ form_widget(form.name) }}</div>
+            <div class="col-md-2">{{ form_widget(form.email) }}</div>
+            <div class="col-md-2">{{ form_widget(form.group) }}</div>
+            <div class="col-md-2">{{ form_widget(form.status) }}</div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-primary">Filter</button>
+                <a href="{{ path('work_members') }}" class="btn btn-outline-secondary">Reset</a>
+            </div>
+        </div>
+        {{ form_end(form) }}
+    </div>
+    <div class="card">
+        <div class="card-header">Members</div>
+        <div class="card-body">
+            <table class="table table-responsive-sm table-bordered table-striped table-sm">
+                <thead>
+                <tr>
+                    <td>{{ knp_pagination_sortable(pagination, 'Name', 'name') }}</td>
+                    <td>{{ knp_pagination_sortable(pagination, 'Email', 'email')}}</td>
+                    <td>{{ knp_pagination_sortable(pagination, 'Group', 'group')}}</td>
+                    <td>Projects</td>
+                    <td>{{ knp_pagination_sortable(pagination, 'Status', 'status')}}</td>
+                </tr>
+                </thead>
+                <tbody>
+                {% for member in pagination %}
+                    <tr>
+                        <td><a href="{{ path('work_members_show', { id: member.id }) }}"> {{ member.name }}</a></td>
+                        <td>{{ member.id }}</td>
+                        <td>{{ member.email }}</td>
+                        <td>{{ member.memberships_count }}</td>
+                        <td>{{ member.group }}</td>
+                        <td>{{ member_status(member.status) }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="navigation">
+        {{ knp_pagination_render(pagination) }}
+    </div>
+{% endblock %}

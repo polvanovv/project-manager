@@ -5,8 +5,6 @@ declare(strict_types = 1);
 namespace App\ReadModel\User;
 
 
-use App\Model\User\Entity\User\Name;
-
 class DetailView
 {
     public $id;

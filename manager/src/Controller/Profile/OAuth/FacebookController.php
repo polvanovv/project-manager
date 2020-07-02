@@ -1,13 +1,13 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace App\Controller\Profile\OAuth;
 
 
+use App\Controller\ErrorHandler;
 use App\Model\User\UseCase\Network\Attach\Command;
 use KnpU\OAuth2ClientBundle\Client\ClientRegistry;
-use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -24,16 +24,18 @@ use App\Model\User\UseCase\Network\Attach\Handler;
  */
 class FacebookController extends AbstractController
 {
-
+    /**
+     * @var ErrorHandler
+     */
+    private $errorHandler;
 
     /**
-     * @var LoggerInterface
+     * FacebookController constructor.
+     * @param ErrorHandler $errorHandler
      */
-    private $logger;
-
-    public function __construct(LoggerInterface $logger)
+    public function __construct(ErrorHandler $errorHandler)
     {
-        $this->logger = $logger;
+        $this->errorHandler = $errorHandler;
     }
 
     /**
@@ -72,7 +74,7 @@ class FacebookController extends AbstractController
 
             return $this->redirectToRoute('profile');
         } catch (\DomainException $e) {
-            $this->logger->error($e->getMessage(), ['exception'=>$e]);
+            $this->errorHandler->handle($e);
             $this->addFlash('error', $e->getMessage());
 
             return $this->redirectToRoute('profile');
