@@ -4,9 +4,9 @@
 namespace App\Controller\Work\Projects\Project\Settings;
 
 use App\Annotations\Guid;
+use App\Controller\ErrorHandler;
 use App\Model\Work\Entity\Members\Member\Id;
 use App\Model\Work\Entity\Projects\Project\Project;
-use Psr\Log\LoggerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -25,15 +25,18 @@ use App\Model\Work\UseCase\Projects\Project\Membership;
  */
 class MembersController extends AbstractController
 {
+    /**
+     * @var ErrorHandler
+     */
+    private $errorHandler;
 
     /**
-     * @var LoggerInterface
+     * MembersController constructor.
+     * @param ErrorHandler $errorHandler
      */
-    private $logger;
-
-    public function __construct(LoggerInterface $logger)
+    public function __construct(ErrorHandler $errorHandler)
     {
-        $this->logger = $logger;
+        $this->errorHandler = $errorHandler;
     }
 
     /**
@@ -74,7 +77,7 @@ class MembersController extends AbstractController
                 $handler->handle($command);
                 return $this->redirectToRoute('work_projects_project_settings_membership', ['project_id' => $project->getId()]);
             } catch (\DomainException $e) {
-                $this->logger->warning($e->getMessage(), ['exception' => $e]);
+                $this->errorHandler->handle($e);
                 $this->addFlash('error', $e->getMessage());
             }
         }
@@ -109,7 +112,7 @@ class MembersController extends AbstractController
                 $handler->handle($command);
                 return $this->redirectToRoute('work_projects_project_settings_membership', ['project_id' => $project->getId()]);
             } catch (\DomainException $e) {
-                $this->logger->warning('error', ['exception' => $e]);
+                $this->errorHandler->handle($e);
                 $this->addFlash('error', $e->getMessage());
             }
         }
@@ -140,7 +143,7 @@ class MembersController extends AbstractController
         try {
             $handler->handle($command);
         } catch (\DomainException $e) {
-            $this->logger->warning($e->getMessage(), [['exception' => $e]]);
+            $this->errorHandler->handle($e);
             $this->addFlash('error', $e->getMessage());
         }
 

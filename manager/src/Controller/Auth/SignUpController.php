@@ -1,14 +1,14 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace App\Controller\Auth;
 
 
+use App\Controller\ErrorHandler;
 use App\Model\User\UseCase\SingUp;
 use App\ReadModel\User\UserFetcher;
 use App\Security\LoginFormAuthenticator;
-use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -18,22 +18,22 @@ use Symfony\Component\Security\Guard\GuardAuthenticatorHandler;
 
 class SignUpController extends AbstractController
 {
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
 
     /**
      * @var UserFetcher
      */
     private $fetcher;
+    /**
+     * @var ErrorHandler
+     */
+    private $errorHandler;
 
-    public function __construct(LoggerInterface $logger, UserFetcher $fetcher)
+    public function __construct(ErrorHandler $errorHandler, UserFetcher $fetcher)
     {
-
-        $this->logger = $logger;
         $this->fetcher = $fetcher;
+        $this->errorHandler = $errorHandler;
     }
+
     /**
      * @Route("/signup", name="auth_signup")
      *
@@ -56,7 +56,7 @@ class SignUpController extends AbstractController
                 return $this->redirectToRoute('home');
 
             } catch (\DomainException $e) {
-                $this->logger->error($e->getMessage(),['exception' => $e]);
+                $this->errorHandler->handle($e);
                 $this->addFlash('error', $e->getMessage());
             }
 
@@ -90,7 +90,7 @@ class SignUpController extends AbstractController
 
         if (!$user = $this->fetcher->findBySignUpConfirmToken($token)) {
             $this->addFlash('error', 'Incorrect or already confirmed token.');
-            return  $this->redirectToRoute('auth_signup');
+            return $this->redirectToRoute('auth_signup');
         }
 
 
@@ -107,7 +107,7 @@ class SignUpController extends AbstractController
                 'main'
             );
         } catch (\DomainException $e) {
-            $this->logger->error($e->getMessage(), ['exception' => $e]);
+            $this->errorHandler->handle($e);
             $this->addFlash('error', $e->getMessage());
             return $this->redirectToRoute('home');
 

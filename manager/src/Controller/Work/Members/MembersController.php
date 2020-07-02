@@ -3,6 +3,7 @@
 
 namespace App\Controller\Work\Members;
 
+use App\Controller\ErrorHandler;
 use App\Model\User\Entity\User\User;
 use App\Model\Work\Entity\Members\Member\Member;
 use App\Model\Work\UseCase\Members\Member\Archive;
@@ -13,7 +14,6 @@ use App\Model\Work\UseCase\Members\Member\Move;
 use App\ReadModel\Work\Members\Member\Filter;
 use App\ReadModel\Work\Members\Member\MemberFetcher;
 use App\ReadModel\Work\Projects\Project\DepartmentFetcher;
-use Psr\Log\LoggerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -27,12 +27,18 @@ use Symfony\Component\Routing\Annotation\Route;
 class MembersController extends AbstractController
 {
     private const PER_PAGE = 20;
+    /**
+     * @var ErrorHandler
+     */
+    private $errorHandler;
 
-    private $logger;
-
-    public function __construct(LoggerInterface $logger)
+    /**
+     * MembersController constructor.
+     * @param ErrorHandler $errorHandler
+     */
+    public function __construct(ErrorHandler $errorHandler)
     {
-        $this->logger = $logger;
+        $this->errorHandler = $errorHandler;
     }
 
     /**
@@ -90,7 +96,7 @@ class MembersController extends AbstractController
                 $handler->handle($command);
                 return $this->redirectToRoute('work_members_show', ['id' => $user->getId()]);
             } catch (\DomainException $e) {
-                $this->logger->warning($e->getMessage(), ['exception' => $e]);
+                $this->errorHandler->handle($e);
                 $this->addFlash('error', $e->getMessage());
             }
         }
@@ -119,7 +125,7 @@ class MembersController extends AbstractController
                 $handler->handle($command);
                 return $this->redirectToRoute('work_members_show', ['id' => $member->getId()]);
             } catch (\DomainException $e) {
-                $this->logger->warning($e->getMessage(), ['exception' => $e]);
+                $this->errorHandler->handle($e);
                 $this->addFlash('error', $e->getMessage());
             }
         }
@@ -149,7 +155,7 @@ class MembersController extends AbstractController
                 $handler->handle($command);
                 return $this->redirectToRoute('work_members_show', ['id' => $member->getId()]);
             } catch (\DomainException $e) {
-                $this->logger->warning($e->getMessage(), ['exception' => $e]);
+                $this->errorHandler->handle($e);
                 $this->addFlash('error', $e->getMessage());
             }
         }
@@ -178,7 +184,7 @@ class MembersController extends AbstractController
         try {
             $handler->handle($command);
         } catch (\DomainException $e) {
-            $this->logger->warning($e->getMessage(), ['exception' => $e]);
+            $this->errorHandler->handle($e);
             $this->addFlash('error', $e->getMessage());
         }
 
@@ -208,7 +214,7 @@ class MembersController extends AbstractController
         try {
             $handler->handle($command);
         } catch (\DomainException $e) {
-            $this->logger->warning($e->getMessage(), ['exception' => $e]);
+            $this->errorHandler->handle($e);
             $this->addFlash('error', $e->getMessage());
         }
 

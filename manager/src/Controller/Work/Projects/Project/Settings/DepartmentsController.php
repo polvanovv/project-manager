@@ -3,11 +3,11 @@
 namespace App\Controller\Work\Projects\Project\Settings;
 
 use App\Annotations\Guid;
+use App\Controller\ErrorHandler;
 use App\Model\Work\Entity\Projects\Project\Department\Id;
 use App\Model\Work\Entity\Projects\Project\Project;
 use App\ReadModel\Work\Projects\Project\DepartmentFetcher;
 use App\Security\Voter\Work\ProjectAccess;
-use Psr\Log\LoggerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -27,13 +27,17 @@ use App\Model\Work\UseCase\Projects\Project\Department\Remove;
 class DepartmentsController extends AbstractController
 {
     /**
-     * @var LoggerInterface
+     * @var ErrorHandler
      */
-    private $logger;
+    private $errorHandler;
 
-    public function __construct(LoggerInterface $logger)
+    /**
+     * DepartmentsController constructor.
+     * @param ErrorHandler $errorHandler
+     */
+    public function __construct(ErrorHandler $errorHandler)
     {
-        $this->logger = $logger;
+        $this->errorHandler = $errorHandler;
     }
 
     /**
@@ -76,7 +80,7 @@ class DepartmentsController extends AbstractController
                 $handler->handle($command);
                 return $this->redirectToRoute('work_projects_project_settings_departments', ['project_id' => $project->getId()]);
             } catch (\DomainException $e) {
-                $this->logger->warning($e->getMessage(), ['exception' => $e]);
+                $this->errorHandler->handle($e);
                 $this->addFlash('error', $e->getMessage());
             }
         }
@@ -109,7 +113,7 @@ class DepartmentsController extends AbstractController
                 $handler->handle($command);
                 return $this->redirectToRoute('work_projects_project_settings_departments', ['project_id' => $project->getId(), 'id' => $id]);
             } catch (\DomainException $e) {
-                $this->logger->warning($e->getMessage(), ['exception' => $e]);
+                $this->errorHandler->handle($e);
                 $this->addFlash('error', $e->getMessage());
             }
         }
@@ -122,7 +126,7 @@ class DepartmentsController extends AbstractController
 
     /**
      * @Route("{id}/delete", name="_delete")
-     * 
+     *
      * @param Project $project
      * @param string $id
      * @param Request $request
@@ -139,11 +143,11 @@ class DepartmentsController extends AbstractController
 
         $department = $project->getDepartment(new Id($id));
         $command = new Remove\Command($project->getId()->getValue(), $department->getId()->getValue());
-        
+
         try {
             $handler->handle($command);
         } catch (\DomainException $e) {
-            $this->logger->warning($e->getMessage(), ['exception' => $e]);
+            $this->errorHandler->handle($e);
             $this->addFlash('error', $e->getMessage());
         }
 

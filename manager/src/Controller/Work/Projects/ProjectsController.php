@@ -4,7 +4,6 @@
 namespace App\Controller\Work\Projects;
 
 
-use App\Model\User\Entity\User\Role;
 use App\Model\Work\UseCase\Projects\Project\Create;
 use App\ReadModel\Work\Projects\Project\Filter;
 use App\ReadModel\Work\Projects\Project\ProjectFetcher;

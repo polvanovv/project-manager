@@ -3,14 +3,13 @@
 
 namespace App\Controller\Work\Projects\Project\Settings;
 
-use App\Annotations\Guid;
+use App\Controller\ErrorHandler;
 use App\Model\Work\Entity\Projects\Project\Project;
 use App\Model\Work\UseCase\Projects\Project\Archive;
 use App\Model\Work\UseCase\Projects\Project\Edit;
 use App\Model\Work\UseCase\Projects\Project\Reinstate;
 use App\Model\Work\UseCase\Projects\Project\Remove;
 use App\Security\Voter\Work\ProjectAccess;
-use Psr\Log\LoggerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -23,11 +22,18 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class SettingsController extends AbstractController
 {
-    private $logger;
+    /**
+     * @var ErrorHandler
+     */
+    private $errorHandler;
 
-    public function __construct(LoggerInterface $logger)
+    /**
+     * SettingsController constructor.
+     * @param ErrorHandler $errorHandler
+     */
+    public function __construct(ErrorHandler $errorHandler)
     {
-        $this->logger = $logger;
+        $this->errorHandler = $errorHandler;
     }
 
     /**
@@ -62,7 +68,7 @@ class SettingsController extends AbstractController
                 $handler->handle($command);
                 return $this->redirectToRoute('work_projects_project_show', ['id' => $project->getId()]);
             } catch (\DomainException $e) {
-                $this->logger->warning($e->getMessage(), ['exception' => $e]);
+                $this->errorHandler->handle($e);
                 $this->addFlash('error', $e->getMessage());
             }
         }
@@ -93,7 +99,7 @@ class SettingsController extends AbstractController
         try {
             $handler->handle($command);
         } catch (\DomainException $e) {
-            $this->logger->warning($e->getMessage(), ['exception' => $e]);
+            $this->errorHandler->handle($e);
             $this->addFlash('error', $e->getMessage());
         }
 
@@ -120,7 +126,7 @@ class SettingsController extends AbstractController
         try {
             $handler->handle($command);
         } catch (\DomainException $e) {
-            $this->logger->warning($e->getMessage(), ['exception' => $e]);
+            $this->errorHandler->handle($e);
             $this->addFlash('error', $e->getMessage());
         }
 
@@ -147,7 +153,7 @@ class SettingsController extends AbstractController
         try {
             $handler->handle($command);
         } catch (\DomainException $e) {
-            $this->logger->warning($e->getMessage(), ['exception' => $e]);
+            $this->errorHandler->handle($e);
             $this->addFlash('error', $e->getMessage());
         }
 

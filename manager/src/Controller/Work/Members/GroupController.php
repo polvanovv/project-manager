@@ -4,12 +4,12 @@
 namespace App\Controller\Work\Members;
 
 
+use App\Controller\ErrorHandler;
 use App\Model\Work\Entity\Members\Group\Group;
 use App\Model\Work\UseCase\Members\Group\Create;
 use App\Model\Work\UseCase\Members\Group\Edit;
 use App\Model\Work\UseCase\Members\Group\Remove;
 use App\ReadModel\Work\Members\GroupFetcher;
-use Psr\Log\LoggerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -27,13 +27,17 @@ use Symfony\Component\Routing\Annotation\Route;
 class GroupController extends AbstractController
 {
     /**
-     * @var LoggerInterface
+     * @var ErrorHandler
      */
-    private $logger;
+    private $errorHandler;
 
-    public function __construct(LoggerInterface $logger)
+    /**
+     * GroupController constructor.
+     * @param ErrorHandler $errorHandler
+     */
+    public function __construct(ErrorHandler $errorHandler)
     {
-        $this->logger = $logger;
+        $this->errorHandler = $errorHandler;
     }
 
     /**
@@ -70,7 +74,7 @@ class GroupController extends AbstractController
                 $handler->handle($command);
                 return $this->redirectToRoute('work_members_groups');
             } catch (\DomainException $e) {
-                $this->logger->warning($e->getMessage(), ['exception' => $e]);
+                $this->errorHandler->handle($e);
                 $this->addFlash('error', $e->getMessage());
             }
         }
@@ -100,7 +104,7 @@ class GroupController extends AbstractController
                 $handler->handle($command);
                 return $this->redirectToRoute('work_members_groups_edit', ['id' => $group->getId()]);
             } catch (\DomainException $e) {
-                $this->logger->warning($e->getMessage(), ['exception' => $e]);
+                $this->errorHandler->handle($e);
                 $this->addFlash('error', $e->getMessage());
             }
         }
@@ -118,7 +122,7 @@ class GroupController extends AbstractController
      * @param Remove\Handler $handler
      * @return RedirectResponse
      */
-    public function delete(Group $group,Request $request, Remove\Handler $handler)
+    public function delete(Group $group, Request $request, Remove\Handler $handler)
     {
         if (!$this->isCsrfTokenValid('delete', $request->request->get('token'))) {
             return $this->redirectToRoute('work_members_groups');
@@ -130,7 +134,7 @@ class GroupController extends AbstractController
             $handler->handle($command);
             $this->redirectToRoute('work_members_groups');
         } catch (\DomainException $e) {
-            $this->logger->warning($e->getMessage(), ['exception'=>$e]);
+            $this->errorHandler->handle($e);
             $this->addFlash('error', $e->getMessage());
         }
 

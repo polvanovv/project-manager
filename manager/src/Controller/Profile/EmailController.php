@@ -1,11 +1,11 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace App\Controller\Profile;
 
 
-use Psr\Log\LoggerInterface;
+use App\Controller\ErrorHandler;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -26,13 +26,13 @@ class EmailController extends AbstractController
 {
 
     /**
-     * @var LoggerInterface
+     * @var ErrorHandler
      */
-    private $logger;
+    private $errorHandler;
 
-    public function __construct(LoggerInterface $logger)
+    public function __construct(ErrorHandler $errorHandler)
     {
-        $this->logger = $logger;
+        $this->errorHandler = $errorHandler;
     }
 
     /**
@@ -59,7 +59,7 @@ class EmailController extends AbstractController
 
                 return $this->redirectToRoute('profile');
             } catch (\DomainException $e) {
-                $this->logger->warning($e->getMessage(), ['exception' => $e]);
+                $this->errorHandler->handle($e);
                 $this->addFlash('error', $e->getMessage());
             }
         }
@@ -89,7 +89,7 @@ class EmailController extends AbstractController
 
             return $this->redirectToRoute('profile');
         } catch (\DomainException $e) {
-            $this->logger->warning($e->getMessage(), ['exception' => $e]);
+            $this->errorHandler->handle($e);
             $this->addFlash('error', $e->getMessage());
 
             return $this->redirectToRoute('profile');
